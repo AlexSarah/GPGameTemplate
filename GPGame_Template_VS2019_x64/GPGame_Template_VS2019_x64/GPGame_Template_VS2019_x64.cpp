@@ -50,6 +50,7 @@ Graphics    myGraphics;        // Runing all the graphics in this object
 
 // DEMO OBJECTS
 Cube        myCube;
+Cube		myCube2;
 Sphere      mySphere;
 Arrow       arrowX;
 Arrow       arrowY;
@@ -65,6 +66,7 @@ float t = 0.001f;            // Global variable for animation
 int main()
 {
 	int errorGraphics = myGraphics.Init();			// Launch window and graphics context
+	cout << "Thank you Mario!" << endl << "But our princess is in another castle!"; //test
 	if (errorGraphics) return 0;					// Close if something went wrong...
 
 	startup();										// Setup all necessary information for startup (aka. load texture, shaders, models, etc).
@@ -117,6 +119,8 @@ void startup() {
 
 	// Load Geometry examples
 	myCube.Load();
+	myCube2.Load();
+	myCube2.fillColor = glm::vec4(0.0f, 1.0f, 0.0f, 1.0f);
 
 	mySphere.Load();
 	mySphere.fillColor = glm::vec4(0.0f, 1.0f, 0.0f, 1.0f);    // You can change the shape fill colour, line colour or linewidth
@@ -205,6 +209,13 @@ void updateSceneElements() {
 	myCube.mv_matrix = myGraphics.viewMatrix * mv_matrix_cube;
 	myCube.proj_matrix = myGraphics.proj_matrix;
 
+	glm::mat4 mv_matrix_cube2 =
+		glm::translate(glm::vec3(0.0f, 0.0f, 0.0f)) *
+		glm::rotate(-t, glm::vec3(0.0f, 1.0f, 0.0f)) *
+		glm::mat4(1.0f);
+	myCube2.mv_matrix = myGraphics.viewMatrix * mv_matrix_cube2;
+	myCube2.proj_matrix = myGraphics.proj_matrix;
+
 	// calculate Sphere movement
 	glm::mat4 mv_matrix_sphere =
 		glm::translate(glm::vec3(-2.0f, 0.5f, 0.0f)) *
@@ -273,6 +284,7 @@ void renderScene() {
 	// Draw objects in screen
 	myFloor.Draw();
 	myCube.Draw();
+	myCube2.Draw();
 	mySphere.Draw();
 
 	arrowX.Draw();
