@@ -24,6 +24,7 @@ using namespace std;
 #include <glm/gtx/transform.hpp>
 #include "graphics.h"
 #include "shapes.h"
+#include "particle.h"
 
 // MAIN FUNCTIONS
 void startup();
@@ -50,7 +51,6 @@ Graphics    myGraphics;        // Runing all the graphics in this object
 
 // DEMO OBJECTS
 Cube        myCube;
-Cube		myCube2;
 Sphere      mySphere;
 Arrow       arrowX;
 Arrow       arrowY;
@@ -59,19 +59,18 @@ Cube        myFloor;
 Line        myLine;
 Cylinder    myCylinder;
 
+//Particle explosion
+Particle p;
+
 // Some global variable to do the animation.
 float t = 0.001f;            // Global variable for animation
-
 
 int main()
 {
 	int errorGraphics = myGraphics.Init();			// Launch window and graphics context
-	cout << "Thank you Mario!" << endl << "But our princess is in another castle!"; //test
 	if (errorGraphics) return 0;					// Close if something went wrong...
 
 	startup();										// Setup all necessary information for startup (aka. load texture, shaders, models, etc).
-
-
 
 	// MAIN LOOP run until the window is closed
 	while (!quit) {
@@ -118,12 +117,17 @@ void startup() {
 	myGraphics.proj_matrix = glm::perspective(glm::radians(50.0f), myGraphics.aspect, 0.1f, 1000.0f);
 
 	// Load Geometry examples
-	myCube.Load();
-	myCube2.Load();
-	myCube2.fillColor = glm::vec4(0.0f, 1.0f, 0.0f, 1.0f);
 
-	mySphere.Load();
-	mySphere.fillColor = glm::vec4(0.0f, 1.0f, 0.0f, 1.0f);    // You can change the shape fill colour, line colour or linewidth
+	//Particle explosion
+	p.load();
+	//Shapes shapePcl = mySphere;
+	//mySphere.Load();
+	//mySphere.fillColor = glm::vec4(0.0f, 0.0f, 1.0f, 1.0f);
+
+	myCube.Load();
+
+ 	//mySphere.Load();
+	//mySphere.fillColor = glm::vec4(0.0f, 1.0f, 0.0f, 1.0f);    // You can change the shape fill colour, line colour or linewidth
 
 	arrowX.Load(); arrowY.Load(); arrowZ.Load();
 	arrowX.fillColor = glm::vec4(1.0f, 0.0f, 0.0f, 1.0f); arrowX.lineColor = glm::vec4(1.0f, 0.0f, 0.0f, 1.0f);
@@ -145,7 +149,6 @@ void startup() {
 
 	// Optimised Graphics
 	myGraphics.SetOptimisations();        // Cull and depth testing
-
 }
 
 void updateCamera() {
@@ -202,29 +205,28 @@ void updateSceneElements() {
 
 	// Do not forget your ( T * R * S ) http://www.opengl-tutorial.org/beginners-tutorials/tutorial-3-matrices/
 
+	//Particle explosion
+	
+	double time = glfwGetTime();
+	
+	if ((0.5 * 9.81 * pow(time, 2)) > 4.00) {
+		p.active = 0;
+	}
+
+		glm::mat4 mv_matrix_sphere =
+			glm::translate(glm::vec3(-2.0f, 4.5f - p.active*0.5*9.81*pow(time,2), 0.0f)) *
+			glm::mat4(1.0f);
+		p.shapePcl.mv_matrix = myGraphics.viewMatrix * mv_matrix_sphere;
+		p.shapePcl.proj_matrix = myGraphics.proj_matrix;
+
+
 	// Calculate Cube position
 	glm::mat4 mv_matrix_cube =
 		glm::translate(glm::vec3(2.0f, 0.5f, 0.0f)) *
 		glm::mat4(1.0f);
 	myCube.mv_matrix = myGraphics.viewMatrix * mv_matrix_cube;
 	myCube.proj_matrix = myGraphics.proj_matrix;
-
-	glm::mat4 mv_matrix_cube2 =
-		glm::translate(glm::vec3(0.0f, 0.0f, 0.0f)) *
-		glm::rotate(-t, glm::vec3(0.0f, 1.0f, 0.0f)) *
-		glm::mat4(1.0f);
-	myCube2.mv_matrix = myGraphics.viewMatrix * mv_matrix_cube2;
-	myCube2.proj_matrix = myGraphics.proj_matrix;
-
-	// calculate Sphere movement
-	glm::mat4 mv_matrix_sphere =
-		glm::translate(glm::vec3(-2.0f, 0.5f, 0.0f)) *
-		glm::rotate(-t, glm::vec3(0.0f, 1.0f, 0.0f)) *
-		glm::rotate(-t, glm::vec3(1.0f, 0.0f, 0.0f)) *
-		glm::mat4(1.0f);
-	mySphere.mv_matrix = myGraphics.viewMatrix * mv_matrix_sphere;
-	mySphere.proj_matrix = myGraphics.proj_matrix;
-
+	
 	//Calculate Arrows translations (note: arrow model points up)
 	glm::mat4 mv_matrix_x =
 		glm::translate(glm::vec3(0.0f, 0.0f, 0.0f)) *
@@ -270,7 +272,7 @@ void updateSceneElements() {
 	myLine.proj_matrix = myGraphics.proj_matrix;
 
 
-	t += 0.01f; // increment movement variable
+	//t += 0.01f; // increment movement variable
 
 
 	if (glfwWindowShouldClose(myGraphics.window) == GL_TRUE) quit = true; // If quit by pressing x on window.
@@ -284,8 +286,10 @@ void renderScene() {
 	// Draw objects in screen
 	myFloor.Draw();
 	myCube.Draw();
-	myCube2.Draw();
-	mySphere.Draw();
+	//mySphere.Draw();
+	if (p.active == 1) {
+		p.shapePcl.Draw();
+	}
 
 	arrowX.Draw();
 	arrowY.Draw();
