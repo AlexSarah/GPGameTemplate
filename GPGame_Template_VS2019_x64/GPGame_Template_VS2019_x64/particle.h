@@ -7,7 +7,9 @@ class Particle
 public:
     Sphere shapePcl;
 
-    int active;
+    glm::vec3 vec0;
+
+    int  lifespan;
 
     bool dead;
 
@@ -15,11 +17,8 @@ public:
 
     Particle(int x);
 
+    void init(glm::vec3 vec);
+
     void load();
-
-    //void updatePcl(Graphics& myGraphics, float t);
-
-    //void draw();
-
 };
 

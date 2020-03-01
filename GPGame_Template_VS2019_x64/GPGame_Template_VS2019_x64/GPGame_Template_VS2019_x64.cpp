@@ -17,7 +17,6 @@ using namespace std;
 
 // Helper graphic libraries
 #include <GL/glew.h>
-
 #include <GLFW/glfw3.h>
 #include <glm/glm.hpp>
 #define GLM_ENABLE_EXPERIMENTAL
@@ -25,6 +24,7 @@ using namespace std;
 #include "graphics.h"
 #include "shapes.h"
 #include "particle.h"
+#include "emitter.h"
 
 // MAIN FUNCTIONS
 void startup();
@@ -51,7 +51,6 @@ Graphics    myGraphics;        // Runing all the graphics in this object
 
 // DEMO OBJECTS
 Cube        myCube;
-Sphere      mySphere;
 Arrow       arrowX;
 Arrow       arrowY;
 Arrow       arrowZ;
@@ -60,7 +59,7 @@ Line        myLine;
 Cylinder    myCylinder;
 
 //Particle explosion
-Particle p;
+Emitter e;
 
 // Some global variable to do the animation.
 float t = 0.001f;            // Global variable for animation
@@ -119,10 +118,9 @@ void startup() {
 	// Load Geometry examples
 
 	//Particle explosion
-	p.load();
-	//Shapes shapePcl = mySphere;
-	//mySphere.Load();
-	//mySphere.fillColor = glm::vec4(0.0f, 0.0f, 1.0f, 1.0f);
+	if (e.p[0].lifespan == 1) {
+		e.create(); //create the particles and load them
+	}
 
 	myCube.Load();
 
@@ -206,19 +204,21 @@ void updateSceneElements() {
 	// Do not forget your ( T * R * S ) http://www.opengl-tutorial.org/beginners-tutorials/tutorial-3-matrices/
 
 	//Particle explosion
-	
-	double time = glfwGetTime();
-	
-	if ((0.5 * 9.81 * pow(time, 2)) > 4.00) {
-		p.active = 0;
+	float fall = 0.5 * 9.81 * pow(currentTime, 2); //r(t)=r(0)-fall=r(0)- 0.5g*t^2
+
+	for (int i = 0; i < 10; i++) { //for each particle
+		if (e.p[i].lifespan == 1) {
+			if (fall > e.p[i].vec0.y - 0.5) { //position where sphere touches the floor
+				e.p[i].lifespan = 0; //dead
+			}
+			cout << "\n!! " << e.p[i].vec0.y << " " << fall;  //delete later
+			glm::mat4 mv_matrix_sphere =
+				glm::translate(glm::vec3(e.p[i].vec0.x, e.p[i].vec0.y - fall, e.p[i].vec0.z)) *
+				glm::mat4(1.0f);
+			e.p[i].shapePcl.mv_matrix = myGraphics.viewMatrix * mv_matrix_sphere;
+			e.p[i].shapePcl.proj_matrix = myGraphics.proj_matrix;
+		}
 	}
-
-		glm::mat4 mv_matrix_sphere =
-			glm::translate(glm::vec3(-2.0f, 4.5f - p.active*0.5*9.81*pow(time,2), 0.0f)) *
-			glm::mat4(1.0f);
-		p.shapePcl.mv_matrix = myGraphics.viewMatrix * mv_matrix_sphere;
-		p.shapePcl.proj_matrix = myGraphics.proj_matrix;
-
 
 	// Calculate Cube position
 	glm::mat4 mv_matrix_cube =
@@ -286,9 +286,13 @@ void renderScene() {
 	// Draw objects in screen
 	myFloor.Draw();
 	myCube.Draw();
-	//mySphere.Draw();
-	if (p.active == 1) {
-		p.shapePcl.Draw();
+	
+	//Particle explosion
+	for (int i = 0; i < 10; i++) {
+		if (e.p[i].lifespan == 1) {
+			cout << "\n " << e.p[i].lifespan;
+			e.p[i].shapePcl.Draw();
+		}
 	}
 
 	arrowX.Draw();
