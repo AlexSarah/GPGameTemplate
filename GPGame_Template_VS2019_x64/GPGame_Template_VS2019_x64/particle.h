@@ -7,7 +7,11 @@ class Particle
 public:
     Sphere shapePcl;
 
-    glm::vec3 vec0;
+    float orientation;
+
+    glm::vec3 pos0;
+
+    glm::vec3 position;
 
     int  lifespan;
 
@@ -15,10 +19,14 @@ public:
 
     Particle();
 
+    void init(glm::vec3 vec, float o);
+
     Particle(int x);
 
-    void init(glm::vec3 vec);
-
     void load();
+
+    void update();
+
+    float birthTime;
 };
 

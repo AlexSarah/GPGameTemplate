@@ -3,7 +3,9 @@
 class Emitter
 {
 public:
-	Particle p[10];
+	Particle p[360];
 
-	void create();
+	void create(int nb);
+
+	int nbPcl;
 };

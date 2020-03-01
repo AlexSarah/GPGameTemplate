@@ -25,6 +25,7 @@ using namespace std;
 #include "shapes.h"
 #include "particle.h"
 #include "emitter.h"
+#define rad glm::radians
 
 // MAIN FUNCTIONS
 void startup();
@@ -60,9 +61,11 @@ Cylinder    myCylinder;
 
 //Particle explosion
 Emitter e;
+//Particle p;
 
 // Some global variable to do the animation.
 float t = 0.001f;            // Global variable for animation
+int loop = 0;
 
 int main()
 {
@@ -118,9 +121,11 @@ void startup() {
 	// Load Geometry examples
 
 	//Particle explosion
-	if (e.p[0].lifespan == 1) {
-		e.create(); //create the particles and load them
-	}
+		e.create(360); //create 360 particles and load them
+	/*if (p.lifespan == 1) {
+		p.load(); 
+		p.init(glm::vec3(0.0f, 0.0f, 0.0f),10.0f);
+	}*/
 
 	myCube.Load();
 
@@ -204,19 +209,23 @@ void updateSceneElements() {
 	// Do not forget your ( T * R * S ) http://www.opengl-tutorial.org/beginners-tutorials/tutorial-3-matrices/
 
 	//Particle explosion
-	float fall = 0.5 * 9.81 * pow(currentTime, 2); //r(t)=r(0)-fall=r(0)- 0.5g*t^2
-
-	for (int i = 0; i < 10; i++) { //for each particle
-		if (e.p[i].lifespan == 1) {
-			if (fall > e.p[i].vec0.y - 0.5) { //position where sphere touches the floor
-				e.p[i].lifespan = 0; //dead
+	for (int i = 0; i < e.nbPcl; i++) { //for each particle
+		if (e.p[i].dead == true) {
+			int r = rand() % 8;
+			if (r == 0) {
+				e.p[i].dead = false;
+				e.p[i].birthTime = currentTime;
 			}
-			cout << "\n!! " << e.p[i].vec0.y << " " << fall;  //delete later
+		}
+		if (e.p[i].dead == false) {
+			e.p[i].update();
 			glm::mat4 mv_matrix_sphere =
-				glm::translate(glm::vec3(e.p[i].vec0.x, e.p[i].vec0.y - fall, e.p[i].vec0.z)) *
+				glm::scale(glm::vec3(0.1f, 0.1f, 0.1f)) *
+				glm::translate(glm::vec3(e.p[i].position.x, e.p[i].position.y, e.p[i].position.z)) *
 				glm::mat4(1.0f);
 			e.p[i].shapePcl.mv_matrix = myGraphics.viewMatrix * mv_matrix_sphere;
 			e.p[i].shapePcl.proj_matrix = myGraphics.proj_matrix;
+			std::cout << "\n " << i << " : y pos : " <<  e.p[i].position.y;
 		}
 	}
 
@@ -288,12 +297,17 @@ void renderScene() {
 	myCube.Draw();
 	
 	//Particle explosion
-	for (int i = 0; i < 10; i++) {
-		if (e.p[i].lifespan == 1) {
-			cout << "\n " << e.p[i].lifespan;
+	for (int i = 0; i < e.nbPcl; i++) {
+		if (e.p[i].dead == false) {
 			e.p[i].shapePcl.Draw();
 		}
 	}
+
+	loop += 1;
+	std::cout << "\n number of loops : " << loop;
+	/*if (p.lifespan == 1) {
+		p.shapePcl.Draw();
+	}*/
 
 	arrowX.Draw();
 	arrowY.Draw();
