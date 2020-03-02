@@ -5,7 +5,7 @@ class Particle
 {
 
 public:
-    Sphere shapePcl;
+    Shapes shapePcl;
 
     float orientation;
 
@@ -19,7 +19,7 @@ public:
 
     Particle();
 
-    void init(glm::vec3 vec, float o);
+    void init(glm::vec3 vec, float o, Shapes shape);
 
     Particle(int x);
 

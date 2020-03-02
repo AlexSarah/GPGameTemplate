@@ -163,10 +163,8 @@
     <ClCompile Include="graphics.cpp" />
     <ClCompile Include="particle.cpp" />
     <ClCompile Include="shapes.cpp" />
-    <ClCompile Include="emitter.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="emitter.h" />
     <ClInclude Include="Game.h" />
     <ClInclude Include="GameObject.h" />
     <ClInclude Include="graphics.h" />

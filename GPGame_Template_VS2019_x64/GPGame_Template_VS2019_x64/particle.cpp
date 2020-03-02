@@ -17,14 +17,11 @@ using namespace std;
         dead = true;
     }
 
-    void Particle::init(glm::vec3 vec,float o) {
-        pos0.x = vec.x;
-        pos0.y = vec.y;
-        pos0.z = vec.z;
-        position.x = pos0.x;
-        position.y = pos0.y;
-        position.z = pos0.z;
+    void Particle::init(glm::vec3 vec,float o, Shapes shape) {
+        pos0 = glm::vec3(vec.x,vec.y,vec.z);
+        position = glm::vec3(pos0.x, pos0.y, pos0.z);
         orientation = o;
+        shapePcl = shape;
     }   
 
     void Particle::load() {
@@ -42,7 +39,7 @@ using namespace std;
         position.z = (v0 * cos(rad(80.0f)) * (t-birthTime) + pos0.x) * sin(rad(orientation));
         if (position.y < 0.0) {
             dead = true;
-            init(glm::vec3(0.0f, 0.0f, 0.0f),orientation);
+            init(glm::vec3(0.0f, 0.0f, 0.0f),orientation,shapePcl);
         }
     }
 
