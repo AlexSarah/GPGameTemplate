@@ -36,67 +36,22 @@ GameObject::GameObject(int id_param, int object_type_param, int figure_type_para
 		createFountain(figure);
 		break;
 	}
-	calculate_center_relative_position();
+	 if (object_type_param != 6)
+		 figure.Load();
+	figure_center();
 	CollisionBox();
+	collision.fillColor = glm::vec4(0.0f, 1.0f, 0.0f, 0.0f);
+	collision.lineColor = glm::vec4(0.0f, 1.0f, 0.0f, 1.0f);
 	dead = true;
 }
 
 void		GameObject::CollisionBox()
 {
-	cout << "Je suis passé par là les amis !!!" << endl;
 	collision = Cube();
 	collision.Load();
 
 }
 
-void GameObject::calculate_center_relative_position()
-{
-	GLfloat min_x, max_x,
-		min_y, max_y,
-		min_z, max_z;
-
-	glm::mat4 mat_transformation = glm::translate(glm::vec3(translation)) * glm::rotate(angle, rotation) * glm::scale(scaling) * glm::mat4(1.0f);
-	glm::vec4 world_coordinates;
-
-	world_coordinates = matrices_mul(mat_transformation, glm::vec4(figure.vertexPositions[0], figure.vertexPositions[1], figure.vertexPositions[2], 1));
-	min_x = max_x = world_coordinates.x;
-	min_y = max_y = world_coordinates.y;
-	min_z = max_z = world_coordinates.z;
-
-	for (int i = 0; i < figure.vertexPositions.size() / 3; i += 3)
-	{
-		world_coordinates = matrices_mul(mat_transformation, glm::vec4(figure.vertexPositions[i], figure.vertexPositions[i + 1], figure.vertexPositions[i + 2], 1));
-
-		if (world_coordinates.x < min_x) min_x = world_coordinates.x;
-		if (world_coordinates.x > max_x) max_x = world_coordinates.x;
-		if (world_coordinates.y < min_y)
-		{
-			min_y = world_coordinates.y;
-			//cout << "min_y = " << world_coordinates.y << endl;
-		}
-		if (world_coordinates.y > max_y)
-		{
-			max_y = world_coordinates.y;
-			//cout << "max_y = " << world_coordinates.y << endl;
-		}
-		if (world_coordinates.z < min_z) min_z = world_coordinates.z;
-		if (world_coordinates.z > max_z) max_z = world_coordinates.z;
-	}
-
-	//center_relative_position = glm::vec3((min_x + max_x) / 2, (min_y + max_y) / 2, (min_z + max_z) / 2);
-	collision_scaling = glm::vec3(max_x - min_x, max_y - min_y, max_z - min_z);
-
-	cout << "Distance max entre chaque axe, sur x :" << (max_x - min_x) / 2 << " " << (max_y - min_y) / 2 << ", " << (max_z - min_z) / 2 << endl;
-	worldcenter_position = glm::vec3((min_x + max_x) / 2, (min_y + max_y) / 2, (min_z + max_z) / 2);
-
-
-	max_figure_values.x = max_x;
-	max_figure_values.y = max_y;
-	max_figure_values.z = max_z;
-	min_figure_values.x = min_x;
-	min_figure_values.y = min_y;
-	min_figure_values.z = min_z;
-}
 
 
 void GameObject::update_collision_scale_and_values()

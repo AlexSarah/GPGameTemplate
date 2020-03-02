@@ -169,7 +169,11 @@
     <ClInclude Include="GameObject.h" />
     <ClInclude Include="graphics.h" />
     <ClInclude Include="particle.h" />
+    <ClInclude Include="resource.h" />
     <ClInclude Include="shapes.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="map.txt" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
