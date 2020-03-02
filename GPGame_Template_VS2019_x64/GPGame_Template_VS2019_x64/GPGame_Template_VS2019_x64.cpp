@@ -12,6 +12,7 @@
 
 // Standard C++ libraries
 #include <iostream>
+#include <fstream>
 #include <vector>
 using namespace std;
 
@@ -79,54 +80,38 @@ void startup(Game *game) {
 	}*/
 
 	//For the Cube
-		for (int i = 0; i < game->game_element.size(); i++)
-		{
-			if (game->game_element[i].type != 6)
-				game->game_element[i].figure.Load();
-			//else
-				//game->game_element[i].
-		}
 
-		game->game_element[0].figure.Load();
-		game->game_element[0].collision.Load();
+		
 		game->game_element[0].figure.fillColor = glm::vec4(0.0f, 1.0f, 0.0f, 1.0f);
 		game->game_element[0].collision.fillColor = glm::vec4(0.0f, 1.0f, 0.0f, 0.0f);
 		game->game_element[0].collision.lineColor = glm::vec4(0.0f, 1.0f, 0.0f, 1.0f);
 
 		//For the sphere
-		game->game_element[1].figure.Load();
-		game->game_element[1].collision.Load();
 		game->game_element[1].collision.fillColor = glm::vec4(0.0f, 1.0f, 0.0f, 0.0f);
 		game->game_element[1].collision.lineColor = glm::vec4(0.0f, 1.0f, 0.0f, 1.0f);
 		game->game_element[1].figure.fillColor = glm::vec4(0.0f, 1.0f, 0.0f, 1.0f);    // You can change the shape fill colour, line colour or linewidth
 
 		//For the arrows
-		game->game_element[2].figure.Load(); game->game_element[3].figure.Load(); game->game_element[4].figure.Load();
 		game->game_element[2].figure.fillColor = glm::vec4(1.0f, 0.0f, 0.0f, 1.0f); game->game_element[2].figure.lineColor = glm::vec4(1.0f, 0.0f, 0.0f, 1.0f);
 		game->game_element[3].figure.fillColor = glm::vec4(0.0f, 1.0f, 0.0f, 1.0f); game->game_element[3].figure.lineColor = glm::vec4(0.0f, 1.0f, 0.0f, 1.0f);
 		game->game_element[4].figure.fillColor = glm::vec4(0.0f, 0.0f, 1.0f, 1.0f); game->game_element[4].figure.lineColor = glm::vec4(0.0f, 0.0f, 1.0f, 1.0f);
 
 		//For the floor
-		game->game_element[5].figure.Load();
-		game->game_element[5].collision.Load();
 		game->game_element[5].collision.fillColor = glm::vec4(0.0f, 1.0f, 0.0f, 0.0f);
 		game->game_element[5].collision.lineColor = glm::vec4(0.0f, 1.0f, 0.0f, 1.0f);
 
-		//myFloor.Load();
 		game->game_element[5].figure.fillColor = glm::vec4(130.0f / 255.0f, 96.0f / 255.0f, 61.0f / 255.0f, 1.0f);    // Sand Colour
 		//myFloor.fillColor = glm::vec4(130.0f / 255.0f, 96.0f / 255.0f, 61.0f / 255.0f, 1.0f);    // Sand Colour
 		game->game_element[5].figure.lineColor = glm::vec4(130.0f / 255.0f, 96.0f / 255.0f, 61.0f / 255.0f, 1.0f);    // Sand again
 		//myFloor.lineColor = glm::vec4(130.0f / 255.0f, 96.0f / 255.0f, 61.0f / 255.0f, 1.0f);    // Sand again
 
 		//For the line
-		game->game_element[6].figure.Load();
 		game->game_element[6].figure.fillColor = glm::vec4(1.0f, 1.0f, 1.0f, 1.0f);
 		game->game_element[6].figure.lineColor = glm::vec4(0.2f, 0.2f, 0.2f, 1.0f);
 		game->game_element[6].figure.lineWidth = 5.0f;
 
 
 		//For the cylinder
-		game->game_element[7].figure.Load();
 		game->game_element[7].figure.fillColor = glm::vec4(0.7f, 0.7f, 0.7f, 1.0f);
 		game->game_element[7].figure.lineColor = glm::vec4(0.0f, 0.0f, 0.0f, 1.0f);
 
@@ -346,17 +331,19 @@ void renderScene(Game* game) {
 		p.shapePcl.Draw();
 	}*/
 
+		
 	// Draw objects in screen
 	game->game_element[5].figure.Draw();
 	game->game_element[5].collision.Draw();
-	game->game_element[0].figure.Draw();
-	game->game_element[0].collision.Draw();
 	game->game_element[1].figure.Draw();
 	game->game_element[1].collision.Draw();
+	
 
 	game->game_element[2].figure.Draw();
 	game->game_element[3].figure.Draw();
 	game->game_element[4].figure.Draw();
+	game->game_element[0].figure.Draw();
+	game->game_element[0].collision.Draw();
 
 	/*game->game_element[6].figure.Draw();
 	game->game_element[7].figure.Draw();*/
@@ -413,6 +400,13 @@ int main()
 {
 	int errorGraphics = myGraphics.Init();			// Launch window and graphics context
 	if (errorGraphics) return 0;					// Close if something went wrong...
+	/*ifstream file("./Resource Files/Map.txt");
+
+	if (file)
+		;
+	else
+		exit(0);*/
+
 
 	game.game_element.push_back(GameObject(1, 1, 1));
 	game.game_element.push_back(GameObject(2, 2, 0));
