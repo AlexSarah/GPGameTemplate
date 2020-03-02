@@ -72,48 +72,64 @@ void startup(Game *game) {
 	myGraphics.aspect = (float)myGraphics.windowWidth / (float)myGraphics.windowHeight;
 	myGraphics.proj_matrix = glm::perspective(glm::radians(50.0f), myGraphics.aspect, 0.1f, 1000.0f);
 
-	//Particle explosion
+
+//Particle explosion
 		//e.create(360); //create 360 particles and load them
 	/*if (p.lifespan == 1) {
 		p.load(); 
 		p.init(glm::vec3(0.0f, 0.0f, 0.0f),10.0f);
 	}*/
 
-	//For the Cube
 
-		
-		game->game_element[0].figure.fillColor = glm::vec4(0.0f, 1.0f, 0.0f, 1.0f);
-		game->game_element[0].collision.fillColor = glm::vec4(0.0f, 1.0f, 0.0f, 0.0f);
-		game->game_element[0].collision.lineColor = glm::vec4(0.0f, 1.0f, 0.0f, 1.0f);
+//Setting up colors
+	for (int i=0 ; i < game->game_element.size(); i++)
+	{
+		switch (game->game_element[i].type)
+		{
+			case 1: // 1 for wall, 2 for ground, else is a default cube;
+					if (game->game_element[i].subtype == 1)
+						{
+							game->game_element[i].figure.fillColor = glm::vec4(0.7f, 0.7f, 0.7f, 1.0f);    // You can change the shape fill colour, line colour or linewidth
+							game->game_element[i].figure.lineColor = glm::vec4(0.7f, 0.7f, 0.7f, 1.0f);
+						}
+					else if (game->game_element[i].subtype == 2)
+						{
+							game->game_element[i].figure.fillColor = glm::vec4(130.0f / 255.0f, 96.0f / 255.0f, 61.0f / 255.0f, 1.0f);    // Sand Colour
+							game->game_element[i].figure.lineColor = glm::vec4(130.0f / 255.0f, 96.0f / 255.0f, 61.0f / 255.0f, 1.0f);    // Sand again
+						}
+					break;
+			case 2: //For any spheres
+					game->game_element[i].figure.fillColor = glm::vec4(0.0f, 1.0f, 0.0f, 1.0f);    // You can change the shape fill colour, line colour or linewidth
+					break;
+			case 3: //For any Cylinders
+					game->game_element[i].figure.fillColor = glm::vec4(0.7f, 0.7f, 0.7f, 1.0f);    // You can change the shape fill colour, line colour or linewidth
+					game->game_element[i].figure.lineColor = glm::vec4(0.0f, 0.0f, 0.0f, 1.0f);
+					break;
+			case 4: //For arrows, whih include the axis ones
+					if (game->game_element[i].subtype == 1)
+					{
+						game->game_element[i].figure.fillColor = glm::vec4(1.0f, 0.0f, 0.0f, 1.0f); game->game_element[i].figure.lineColor = glm::vec4(1.0f, 0.0f, 0.0f, 1.0f);
+					}
+					else if (game->game_element[i].subtype == 2)
+					{
+						game->game_element[i].figure.fillColor = glm::vec4(0.0f, 1.0f, 0.0f, 1.0f); game->game_element[i].figure.lineColor = glm::vec4(0.0f, 1.0f, 0.0f, 1.0f);
+					}
+					else if (game->game_element[i].subtype == 3)
+					{
+						game->game_element[i].figure.fillColor = glm::vec4(0.0f, 0.0f, 1.0f, 1.0f); game->game_element[i].figure.lineColor = glm::vec4(0.0f, 0.0f, 1.0f, 1.0f);
+					}
+					break;
+		}
 
-		//For the sphere
-		game->game_element[1].collision.fillColor = glm::vec4(0.0f, 1.0f, 0.0f, 0.0f);
-		game->game_element[1].collision.lineColor = glm::vec4(0.0f, 1.0f, 0.0f, 1.0f);
-		game->game_element[1].figure.fillColor = glm::vec4(0.0f, 1.0f, 0.0f, 1.0f);    // You can change the shape fill colour, line colour or linewidth
+	}
 
-		//For the arrows
-		game->game_element[2].figure.fillColor = glm::vec4(1.0f, 0.0f, 0.0f, 1.0f); game->game_element[2].figure.lineColor = glm::vec4(1.0f, 0.0f, 0.0f, 1.0f);
-		game->game_element[3].figure.fillColor = glm::vec4(0.0f, 1.0f, 0.0f, 1.0f); game->game_element[3].figure.lineColor = glm::vec4(0.0f, 1.0f, 0.0f, 1.0f);
-		game->game_element[4].figure.fillColor = glm::vec4(0.0f, 0.0f, 1.0f, 1.0f); game->game_element[4].figure.lineColor = glm::vec4(0.0f, 0.0f, 1.0f, 1.0f);
 
-		//For the floor
-		game->game_element[5].collision.fillColor = glm::vec4(0.0f, 1.0f, 0.0f, 0.0f);
-		game->game_element[5].collision.lineColor = glm::vec4(0.0f, 1.0f, 0.0f, 1.0f);
 
-		game->game_element[5].figure.fillColor = glm::vec4(130.0f / 255.0f, 96.0f / 255.0f, 61.0f / 255.0f, 1.0f);    // Sand Colour
-		//myFloor.fillColor = glm::vec4(130.0f / 255.0f, 96.0f / 255.0f, 61.0f / 255.0f, 1.0f);    // Sand Colour
-		game->game_element[5].figure.lineColor = glm::vec4(130.0f / 255.0f, 96.0f / 255.0f, 61.0f / 255.0f, 1.0f);    // Sand again
-		//myFloor.lineColor = glm::vec4(130.0f / 255.0f, 96.0f / 255.0f, 61.0f / 255.0f, 1.0f);    // Sand again
 
 		//For the line
 		game->game_element[6].figure.fillColor = glm::vec4(1.0f, 1.0f, 1.0f, 1.0f);
 		game->game_element[6].figure.lineColor = glm::vec4(0.2f, 0.2f, 0.2f, 1.0f);
 		game->game_element[6].figure.lineWidth = 5.0f;
-
-
-		//For the cylinder
-		game->game_element[7].figure.fillColor = glm::vec4(0.7f, 0.7f, 0.7f, 1.0f);
-		game->game_element[7].figure.lineColor = glm::vec4(0.0f, 0.0f, 0.0f, 1.0f);
 
 		// Optimised Graphics
 		myGraphics.SetOptimisations();        // Cull and depth testing
@@ -211,7 +227,6 @@ void updateSceneElements(Game* game) {
 
 	if (check_if_collision(game) == true)
 		t = t - 1;
-	//cout << "CA PASSE PAS, NIQUE TA MERE" << endl;
 
 	//game->game_element[0].calculate_center_relative_position();
 	game->game_element[0].figure_center();
@@ -294,13 +309,13 @@ void updateSceneElements(Game* game) {
 		glm::mat4(1.0f);
 	game->game_element[5].collision.proj_matrix = myGraphics.proj_matrix;
 
-	/*
+
 	// Calculate cylinder
 	game->game_element[7].figure.mv_matrix = myGraphics.viewMatrix *
 		glm::translate(glm::vec3(-1.0f, 0.5f, 2.0f)) *
 		glm::mat4(1.0f);
 	game->game_element[7].figure.proj_matrix = myGraphics.proj_matrix;
-
+/*
 	// Calculate Line
 	game->game_element[6].figure.mv_matrix = myGraphics.viewMatrix *
 		glm::translate(glm::vec3(1.0f, 0.5f, 2.0f)) *
@@ -333,20 +348,10 @@ void renderScene(Game* game) {
 
 		
 	// Draw objects in screen
-	game->game_element[5].figure.Draw();
-	game->game_element[5].collision.Draw();
-	game->game_element[1].figure.Draw();
-	game->game_element[1].collision.Draw();
-	
 
-	game->game_element[2].figure.Draw();
-	game->game_element[3].figure.Draw();
-	game->game_element[4].figure.Draw();
-	game->game_element[0].figure.Draw();
-	game->game_element[0].collision.Draw();
-
-	/*game->game_element[6].figure.Draw();
-	game->game_element[7].figure.Draw();*/
+	for (int i = 0; i < game->game_element.size(); i++)
+			game->game_element[i].figure.Draw();
+	// I don't draw the collision box, they just need to be calculated though.
 }
 
 
@@ -410,9 +415,9 @@ int main()
 
 	game.game_element.push_back(GameObject(1, 1, 1));
 	game.game_element.push_back(GameObject(2, 2, 0));
-	game.game_element.push_back(GameObject(4, 4, 0));
-	game.game_element.push_back(GameObject(5, 4, 0));
-	game.game_element.push_back(GameObject(6, 4, 0));
+	game.game_element.push_back(GameObject(4, 4, 1));
+	game.game_element.push_back(GameObject(5, 4, 2));
+	game.game_element.push_back(GameObject(6, 4, 3));
 	game.game_element.push_back(GameObject(7, 1, 2));
 	game.game_element.push_back(GameObject(8, 5, 0));
 	game.game_element.push_back(GameObject(9, 3, 0));

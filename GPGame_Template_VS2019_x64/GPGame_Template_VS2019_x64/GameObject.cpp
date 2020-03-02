@@ -29,9 +29,12 @@ GameObject::GameObject(int id_param, int object_type_param, int figure_type_para
 	case 6:
 		break;
 	}
-	figure.Load();
+	 if (object_type_param != 6)
+		 figure.Load();
 	figure_center();
 	CollisionBox();
+	collision.fillColor = glm::vec4(0.0f, 1.0f, 0.0f, 0.0f);
+	collision.lineColor = glm::vec4(0.0f, 1.0f, 0.0f, 1.0f);
 	dead = true;
 }
 
