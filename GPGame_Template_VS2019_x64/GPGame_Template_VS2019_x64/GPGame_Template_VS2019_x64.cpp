@@ -125,11 +125,10 @@ void startup(Game *game) {
 
 
 
-
 		//For the line
-		game->game_element[6].figure.fillColor = glm::vec4(1.0f, 1.0f, 1.0f, 1.0f);
+		/*game->game_element[6].figure.fillColor = glm::vec4(1.0f, 1.0f, 1.0f, 1.0f);
 		game->game_element[6].figure.lineColor = glm::vec4(0.2f, 0.2f, 0.2f, 1.0f);
-		game->game_element[6].figure.lineWidth = 5.0f;
+		game->game_element[6].figure.lineWidth = 5.0f;*/
 
 		// Optimised Graphics
 		myGraphics.SetOptimisations();        // Cull and depth testing
@@ -218,8 +217,36 @@ void updateSceneElements(Game* game) {
 		}
 	}*/
 
+
+	for (int i = 0; i < game->game_element.size(); i++)
+	{
+		switch (game->game_element[i].type)
+		{
+			case 1:
+				if (game->game_element[i].subtype == 1 || game->game_element[i].subtype == 2) // The Wall are immobiles
+				{
+					game->game_element[0].translation = glm::vec3(1, 1.0f, 0.0f);
+					game->game_element[i].figure_center();
+					game->game_element[i].figure.mv_matrix = myGraphics.viewMatrix *
+						glm::translate(game->game_element[i].translation) *
+						glm::scale(game->game_element[i].scaling) *
+						glm::mat4(1.0f);
+					game->game_element[i].figure.proj_matrix = myGraphics.proj_matrix;
+				}
+				else if (game->game_element[i].subtype == 2) // The ground is immobile
+				{
+					game->game_element[i].figure_center();
+					game->game_element[i].figure.mv_matrix = myGraphics.viewMatrix *
+						glm::translate(game->game_element[i].translation) *
+						glm::scale(game->game_element[i].scaling) *
+						glm::mat4(1.0f);
+					game->game_element[i].figure.proj_matrix = myGraphics.proj_matrix;
+				}
+				break;
+		}
+	}
 	// Calculate Cube position
-	game->game_element[0].translation = glm::vec3(-t, 1.5f, 0.0f);
+	/*game->game_element[0].translation = glm::vec3(-t, 1.5f, 0.0f);
 	game->game_element[0].rotation = glm::vec3(0.0f, 1.0f, 0.0f);
 	game->game_element[0].angle = -t;
 
@@ -237,8 +264,9 @@ void updateSceneElements(Game* game) {
 		glm::scale(game->game_element[0].scaling) *
 		glm::mat4(1.0f);
 	game->game_element[0].figure.mv_matrix = myGraphics.viewMatrix * mv_matrix_cube;
-	game->game_element[0].figure.proj_matrix = myGraphics.proj_matrix;
-
+	game->game_element[0].figure.proj_matrix = myGraphics.proj_matrix;*/
+	
+	/*
 	glm::mat4 mv_matrix_collision =
 		glm::translate(glm::mat4(1), game->game_element[0].translation) *
 		glm::scale(game->game_element[0].collision_scaling) *
@@ -414,13 +442,13 @@ int main()
 
 
 	game.game_element.push_back(GameObject(1, 1, 1));
-	game.game_element.push_back(GameObject(2, 2, 0));
+	/*game.game_element.push_back(GameObject(2, 2, 0));
 	game.game_element.push_back(GameObject(4, 4, 1));
 	game.game_element.push_back(GameObject(5, 4, 2));
-	game.game_element.push_back(GameObject(6, 4, 3));
+	game.game_element.push_back(GameObject(6, 4, 3));*/
 	game.game_element.push_back(GameObject(7, 1, 2));
-	game.game_element.push_back(GameObject(8, 5, 0));
-	game.game_element.push_back(GameObject(9, 3, 0));
+	/*game.game_element.push_back(GameObject(8, 5, 0));
+	game.game_element.push_back(GameObject(9, 3, 0));*/
 	
 	startup(&game);										// Setup all necessary information for startup (aka. load texture, shaders, models, etc).
 
