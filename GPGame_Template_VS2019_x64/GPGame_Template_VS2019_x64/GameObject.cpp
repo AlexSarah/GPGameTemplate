@@ -1,0 +1,194 @@
+#include "GameObject.h"
+#include	<math.h>
+using namespace std;
+
+GameObject::GameObject(int id_param, int object_type_param, int figure_type_param) :
+	id(id_param), type(object_type_param), subtype(figure_type_param)
+{
+	switch (object_type_param)
+	{
+	case 1:
+		figure = Cube();
+		if (figure_type_param == 1)
+			scaling = glm::vec3(1.0f, 2.0f, 0.4f);
+		else if (figure_type_param == 2)
+			scaling = glm::vec3(1000.0f, 0.001f, 1000.0f);
+		break;
+	case 2:
+		figure = Sphere();
+		break;
+	case 3:
+		figure = Cylinder();
+		break;
+	case 4:
+		figure = Arrow();
+		break;
+	case 5:
+		figure = Line();
+		break;
+	case 6:
+		break;
+	}
+	calculate_center_relative_position();
+	CollisionBox();
+	dead = true;
+}
+
+void		GameObject::CollisionBox()
+{
+	cout << "Je suis passé par là les amis !!!" << endl;
+	collision = Cube();
+	collision.Load();
+
+}
+
+void GameObject::calculate_center_relative_position()
+{
+	GLfloat min_x, max_x,
+		min_y, max_y,
+		min_z, max_z;
+
+	glm::mat4 mat_transformation = glm::translate(glm::vec3(translation)) * glm::rotate(angle, rotation) * glm::scale(scaling) * glm::mat4(1.0f);
+	glm::vec4 world_coordinates;
+
+	world_coordinates = matrices_mul(mat_transformation, glm::vec4(figure.vertexPositions[0], figure.vertexPositions[1], figure.vertexPositions[2], 1));
+	min_x = max_x = world_coordinates.x;
+	min_y = max_y = world_coordinates.y;
+	min_z = max_z = world_coordinates.z;
+
+	for (int i = 0; i < figure.vertexPositions.size() / 3; i += 3)
+	{
+		world_coordinates = matrices_mul(mat_transformation, glm::vec4(figure.vertexPositions[i], figure.vertexPositions[i + 1], figure.vertexPositions[i + 2], 1));
+
+		if (world_coordinates.x < min_x) min_x = world_coordinates.x;
+		if (world_coordinates.x > max_x) max_x = world_coordinates.x;
+		if (world_coordinates.y < min_y)
+		{
+			min_y = world_coordinates.y;
+			//cout << "min_y = " << world_coordinates.y << endl;
+		}
+		if (world_coordinates.y > max_y)
+		{
+			max_y = world_coordinates.y;
+			//cout << "max_y = " << world_coordinates.y << endl;
+		}
+		if (world_coordinates.z < min_z) min_z = world_coordinates.z;
+		if (world_coordinates.z > max_z) max_z = world_coordinates.z;
+	}
+
+	//center_relative_position = glm::vec3((min_x + max_x) / 2, (min_y + max_y) / 2, (min_z + max_z) / 2);
+	collision_scaling = glm::vec3(max_x - min_x, max_y - min_y, max_z - min_z);
+
+	cout << "Distance max entre chaque axe, sur x :" << (max_x - min_x) / 2 << " " << (max_y - min_y) / 2 << ", " << (max_z - min_z) / 2 << endl;
+	worldcenter_position = glm::vec3((min_x + max_x) / 2, (min_y + max_y) / 2, (min_z + max_z) / 2);
+
+
+	max_figure_values.x = max_x;
+	max_figure_values.y = max_y;
+	max_figure_values.z = max_z;
+	min_figure_values.x = min_x;
+	min_figure_values.y = min_y;
+	min_figure_values.z = min_z;
+}
+
+
+void GameObject::update_collision_scale_and_values()
+{
+
+}
+
+
+
+glm::vec4 	GameObject::matrices_mul(glm::mat4 mv_matrix_cube, glm::vec4 coordinates)
+{
+	int		i = 0;
+	float	vertex_position = 0;
+	float		x = 0, y = 0, z = 0, w = 0;
+
+
+	for (int i = 0; i < 16; i = i + 4)
+	{
+		if (i / 4 < 1)
+		{
+			vertex_position = mv_matrix_cube[0].x * coordinates.x + mv_matrix_cube[1].x * coordinates.y + mv_matrix_cube[2].x * coordinates.z + mv_matrix_cube[3].x * coordinates.w;
+			x = vertex_position;
+		}
+		else if (i / 4 >= 1 && i / 4 < 2)
+		{
+			vertex_position = mv_matrix_cube[0].y * coordinates.x + mv_matrix_cube[1].y * coordinates.y + mv_matrix_cube[2].y * coordinates.z + mv_matrix_cube[3].y * coordinates.w;
+			y = vertex_position;
+		}
+		else if (i / 4 >= 2 && i / 4 < 3)
+		{
+			vertex_position = mv_matrix_cube[0].z * coordinates.x + mv_matrix_cube[1].z * coordinates.y + mv_matrix_cube[2].z * coordinates.z + mv_matrix_cube[3].z * coordinates.w;
+			z = vertex_position;
+		}
+		else if (i / 4 >= 3 && i / 4 <= 4)
+		{
+			vertex_position = mv_matrix_cube[0].w * coordinates.x + mv_matrix_cube[1].w * coordinates.y + mv_matrix_cube[2].w * coordinates.z + mv_matrix_cube[3].w * coordinates.w;
+			w = vertex_position;
+		}
+		vertex_position = 0;
+	}
+	glm::vec4 screen_coordinates(x, y, z, w);
+	return screen_coordinates;
+}
+
+void		GameObject::figure_center()
+{
+	int		i = 0;
+	int		j = 0;
+	glm::vec4	test;
+	GLfloat min_x, max_x,
+		min_y, max_y,
+		min_z, max_z;
+
+
+	glm::mat4 mat_transformation = glm::translate(glm::vec3(translation)) * glm::rotate(angle, rotation) * glm::scale(scaling) * glm::mat4(1.0f);
+	float	x = 0, y = 0, z = 0, w = 0;
+	test = matrices_mul(mat_transformation, glm::vec4(figure.vertexPositions[0], figure.vertexPositions[1], figure.vertexPositions[2], 1));
+	min_x = max_x = test.x;
+	min_y = max_y = test.y;
+	min_z = max_z = test.z;
+
+	vector<glm::vec4> vertices_screen_positions;
+	while (i < figure.vertexPositions.size() / 3)
+	{
+		vertices_screen_positions.push_back(matrices_mul(mat_transformation, glm::vec4(figure.vertexPositions[j], figure.vertexPositions[j + 1], figure.vertexPositions[j + 2], 1)));
+		j = j + 3;
+
+		if (vertices_screen_positions[i].x < min_x) min_x = vertices_screen_positions[i].x;
+		if (vertices_screen_positions[i].x > max_x) max_x = vertices_screen_positions[i].x;
+
+		if (vertices_screen_positions[i].y < min_y) min_y = vertices_screen_positions[i].y;
+		if (vertices_screen_positions[i].y > max_y) max_y = vertices_screen_positions[i].y;
+
+		if (vertices_screen_positions[i].z < min_z) min_z = vertices_screen_positions[i].z;
+		if (vertices_screen_positions[i].z > max_z) max_z = vertices_screen_positions[i].z;
+
+		i++;
+	}
+	i = 0;
+	while (i < figure.vertexPositions.size() / 3)
+	{
+		x = x + vertices_screen_positions[i].x;
+		y = y + vertices_screen_positions[i].y;
+		z = z + vertices_screen_positions[i].z;
+		w = w + vertices_screen_positions[i].w;
+		i++;
+	}
+	x = x / (figure.vertexPositions.size() / 3);
+	y = y / (figure.vertexPositions.size() / 3);
+	z = z / (figure.vertexPositions.size() / 3);
+	w = w / (figure.vertexPositions.size() / 3);
+	collision_scaling = glm::vec3(abs(max_x - min_x), abs(max_y - min_y), abs(max_z - min_z) + 0.2);
+	glm::vec3 center_object(x, y, z);
+	worldcenter_position = center_object;
+
+	max_figure_values.x = max_x;
+	max_figure_values.y = max_y;
+	max_figure_values.z = max_z;
+	min_figure_values.x = min_x;
+	min_figure_values.y = min_y;
+	min_figure_values.z = min_z;
+}
