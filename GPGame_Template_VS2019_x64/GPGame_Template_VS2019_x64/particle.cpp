@@ -31,11 +31,7 @@ using namespace std;
         //active = 1;
         //dead = false;
         shapePcl.Load();
-        int r1 = rand() % 4;
-        int r2 = rand() % 4;
-        int r3 = rand() % 4;
-		shapePcl.fillColor = glm::vec4(0.34f * r1, 0.34f * r2, 0.34f * r3, 1.0f);
-        shapePcl.lineColor = glm::vec4(1.0f, 1.0f, 1.0f, 0.0f);
+        setColor();
     }
 
     void Particle::update() {
@@ -44,9 +40,16 @@ using namespace std;
         position.x = (v0 * cos(rad(80.0f)) * (t-birthTime) + pos0.x) * cos(rad(orientation));
         position.y = v0 * sin(rad(80.0f)) * (t-birthTime) - 0.5 * 9.81 * pow((t-birthTime), 2) + pos0.y;
         position.z = (v0 * cos(rad(80.0f)) * (t-birthTime) + pos0.x) * sin(rad(orientation));
-        cout << "\n life : " << lifespan;
         if (position.y < 0.0) {
             dead = true;
             init(glm::vec3(0.0f, 0.0f, 0.0f),orientation);
         }
+    }
+
+    void Particle::setColor() {
+        int r1 = rand() % 4;
+        int r2 = rand() % 4;
+        int r3 = rand() % 4;
+        shapePcl.fillColor = glm::vec4(0.34f * r1, 0.34f * r2, 0.34f * r3, 1.0f);
+        shapePcl.lineColor = glm::vec4(1.0f, 1.0f, 1.0f, 0.0f);
     }
