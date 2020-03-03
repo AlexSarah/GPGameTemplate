@@ -14,6 +14,7 @@
 #include <iostream>
 #include <fstream>
 #include <vector>
+#include <thread>
 using namespace std;
 
 // Helper graphic libraries
@@ -28,6 +29,7 @@ using namespace std;
 #include "emitter.h"
 #include "Game.h"
 #include "GameObject.h"
+using namespace std::this_thread;
 #define rad glm::radians
 
 // MAIN FUNCTIONS
@@ -373,7 +375,6 @@ void renderScene(Game* game) {
 			for (int j = 0; j < game->game_element[i].nbPcl; j++) {
 				game->game_element[i].particles[j]->shapePcl.Draw();
 			}
-			sleep_for(3000);
 		}	// I don't draw the collision box, they just need to be calculated though.
 	}
 }
