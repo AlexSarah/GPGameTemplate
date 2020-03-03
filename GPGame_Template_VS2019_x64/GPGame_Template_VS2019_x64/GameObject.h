@@ -83,5 +83,5 @@ public:
 	void figure_center();
 	void update_collision_scale_and_values();
 	glm::vec4 	matrices_mul(glm::mat4, glm::vec4);
-	void createFountain(int nb);
+	void createFountain(Shapes shape);
 };
