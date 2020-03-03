@@ -133,7 +133,7 @@ void startup(Game *game) {
 		myGraphics.SetOptimisations();        // Cull and depth testing
 }
 
-void updateCamera(Game game) {
+void updateCamera(Game *game) {
 
 	// calculate movement for FPS camera
 	GLfloat xoffset = myGraphics.mouseX - myGraphics.cameraLastX;
@@ -161,15 +161,37 @@ void updateCamera(Game game) {
 	myGraphics.cameraFront = glm::normalize(front);
 
 	// Update movement using the keys
-	GLfloat cameraSpeed = 3.0f * game.deltaTime;
-	if (game.keyStatus[GLFW_KEY_W]) myGraphics.cameraPosition += cameraSpeed * myGraphics.cameraFront;
-	if (game.keyStatus[GLFW_KEY_S]) myGraphics.cameraPosition -= cameraSpeed * myGraphics.cameraFront;
-	if (game.keyStatus[GLFW_KEY_A]) myGraphics.cameraPosition -= glm::normalize(glm::cross(myGraphics.cameraFront, myGraphics.cameraUp)) * cameraSpeed;
-	if (game.keyStatus[GLFW_KEY_D]) myGraphics.cameraPosition += glm::normalize(glm::cross(myGraphics.cameraFront, myGraphics.cameraUp)) * cameraSpeed;
+	GLfloat cameraSpeed = 3.0f * game->deltaTime;
+	if (game->keyStatus[GLFW_KEY_W]) myGraphics.cameraPosition += cameraSpeed * myGraphics.cameraFront;
+	if (game->keyStatus[GLFW_KEY_S]) myGraphics.cameraPosition -= cameraSpeed * myGraphics.cameraFront;
+	if (game->keyStatus[GLFW_KEY_A]) myGraphics.cameraPosition -= glm::normalize(glm::cross(myGraphics.cameraFront, myGraphics.cameraUp)) * cameraSpeed;
+	if (game->keyStatus[GLFW_KEY_D]) myGraphics.cameraPosition += glm::normalize(glm::cross(myGraphics.cameraFront, myGraphics.cameraUp)) * cameraSpeed;
 
+
+	//Update Player position using the keys
+
+	if (game->keyStatus[GLFW_KEY_T])
+		for (int i = 0; i < game->game_element.size(); i++)
+			if (game->game_element[i].id == 89)
+				game->game_element[i].translation.z = game->game_element[i].translation.z + 0.1;
+	if (game->keyStatus[GLFW_KEY_G])
+		for (int i = 0; i < game->game_element.size(); i++)
+		if (game->game_element[i].id == 89)
+			game->game_element[i].translation.z = game->game_element[i].translation.z - 0.1;
+
+	if (game->keyStatus[GLFW_KEY_F])
+		for (int i = 0; i < game->game_element.size(); i++)
+			if (game->game_element[i].id == 89)
+				game->game_element[i].translation.x = game->game_element[i].translation.x + 0.1;
+
+	if (game->keyStatus[GLFW_KEY_H])
+	for (int i = 0; i < game->game_element.size(); i++)
+		if (game->game_element[i].id == 89)
+			game->game_element[i].translation.x = game->game_element[i].translation.x - 0.1;
+	
 	// IMPORTANT PART
 	// Calculate my view matrix using the lookAt helper function
-	if (game.mouseEnabled) {
+	if (game->mouseEnabled) {
 		myGraphics.viewMatrix = glm::lookAt(myGraphics.cameraPosition,			// eye
 			myGraphics.cameraPosition + myGraphics.cameraFront,					// centre
 			myGraphics.cameraUp);												// up
@@ -183,6 +205,13 @@ bool		check_if_collision(Game* game)
 		&& (game->game_element[0].min_figure_values.z <= game->game_element[1].max_figure_values.z && game->game_element[0].max_figure_values.z >= game->game_element[1].min_figure_values.z);
 	;
 }
+
+
+void		move(glm::vec3 param_translation, glm::vec3 param_scaling, glm::vec3 param_rotation)
+{
+
+}
+
 
 void updateSceneElements(Game* game) {
 
@@ -201,18 +230,27 @@ void updateSceneElements(Game* game) {
 		switch (game->game_element[i].type)
 		{
 			case 1:
-				if (game->game_element[i].subtype == 1 || game->game_element[i].subtype == 2) // The Wall are immobiles
+				if (game->game_element[i].subtype == 1) // The Wall are immobiles
 				{
 					game->game_element[0].translation = glm::vec3(1, 1.0f, 0.0f);
 					game->game_element[i].figure_center();
 					game->game_element[i].figure.mv_matrix = myGraphics.viewMatrix *
 						glm::translate(game->game_element[i].translation) *
-						glm::rotate(game->game_element[i].angle, game->game_element[i].rotation) *
+						glm::rotate(glm::radians(game->game_element[i].angle), game->game_element[i].rotation) *
 						glm::scale(game->game_element[i].scaling) *
 						glm::mat4(1.0f);
 					game->game_element[i].figure.proj_matrix = myGraphics.proj_matrix;
 				}
 				else if (game->game_element[i].subtype == 2) // The ground is immobile
+				{
+					game->game_element[i].figure_center();
+					game->game_element[i].figure.mv_matrix = myGraphics.viewMatrix *
+						glm::translate(game->game_element[i].translation) *
+						glm::scale(game->game_element[i].scaling) *
+						glm::mat4(1.0f);
+					game->game_element[i].figure.proj_matrix = myGraphics.proj_matrix;
+				}
+				else
 				{
 					game->game_element[i].figure_center();
 					game->game_element[i].figure.mv_matrix = myGraphics.viewMatrix *
@@ -464,12 +502,13 @@ void		Load_Map(string filename, Game *game)
 					map_coordinates.x -= 1;
 					break;
 				case '2':
+					game->game_element.push_back(GameObject(rand(), 1, 1));
 					if (game->game_element.size() == 0)
 						index = 0;
 					else
 						index = game->game_element.size() - 1;
-					game->game_element.push_back(GameObject(rand(), 1, 1));
-					game->game_element[index].translation = (glm::vec3(map_coordinates.x - 0.01 - 0.2, map_coordinates.y - 1, map_coordinates.z - 0.5));
+					game->game_element[index].translation = (glm::vec3(map_coordinates.x - 0.01 - 0.2, map_coordinates.y - 1, map_coordinates.z - 1));
+					game->game_element[index].scaling = glm::vec3(2.0f, 2.0f, 0.4f);
 					game->game_element[index].rotation = glm::vec3(0.0f, 1.0f, 0.0f);
 					game->game_element[index].angle = 90.0f;
 					map_coordinates.x -= 0.4;
@@ -482,19 +521,47 @@ void		Load_Map(string filename, Game *game)
 		exit(0);
 }
 
+void		Load_car(string datafile)
+{
+	ifstream data(datafile);
+	string		line("");
+
+	if (data)
+	{
+		while (getline(data, line))
+			cout << line << endl;
+	}
+	else
+		exit(0);
+
+}
+
 
 int main()
 {
 	int errorGraphics = myGraphics.Init();			// Launch window and graphics context
-	if (errorGraphics) return 0;					// Close if something went wrong...
+	if (errorGraphics) return 0;
+	ifstream infile;
+	infile.open("car.txt");// Close if something went wrong...
 	string		filename("map.txt");
-	
 
+
+	/*if (infile)
+		;
+	else
+		exit(0);*/
+
+	//Load_car(filename);
+
+/*	if (shit)
+		cout << "IM RICH BIAAAATCHHHH !!!!" << endl;
+	else
+		cout << "SALOOOPR !!!!" << endl;*/
 	Load_Map(filename, &game);
 
 
-
 	game.game_element.push_back(GameObject(7, 1, 2));
+	game.game_element.push_back(GameObject(89, 1, 0));
 	/*game.game_element.push_back(GameObject(8, 5, 0));
 	game.game_element.push_back(GameObject(9, 3, 0));*/
 	game.game_element.push_back(GameObject(10, 6, 0));
@@ -505,7 +572,7 @@ int main()
 	while (!game.quit) {
 
 		// Update the camera transform based on interactive inputs or by following a predifined path.
-		updateCamera(game);
+		updateCamera(&game);
 
 		// Update position, orientations and any other relevant visual state of any dynamic elements in the scene.
 		updateSceneElements(&game);
