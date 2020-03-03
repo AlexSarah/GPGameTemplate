@@ -30,5 +30,7 @@ public:
     void setColor();
 
     float birthTime;
+
+    int id;
 };
 

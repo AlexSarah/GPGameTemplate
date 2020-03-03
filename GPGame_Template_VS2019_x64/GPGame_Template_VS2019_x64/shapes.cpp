@@ -80,7 +80,7 @@ void Shapes::LoadObj() {
 
 
 void Shapes::Load() {
-	const char * vs_source[] = { R"(
+	const char* vs_source[] = { R"(
 #version 330 core
 
 in vec4 position;
@@ -92,8 +92,8 @@ void main(void){
 }
 )" };
 
-	
-	const char * fs_source[] = { R"(
+
+	const char* fs_source[] = { R"(
 #version 330 core
 
 uniform vec4 inColor;
@@ -202,6 +202,7 @@ f 1 4 8)";
 
 	LoadObj();
 }
+
 
 Cube::~Cube() {
 
@@ -961,6 +962,7 @@ f 19/36/12 3/38/12 15/27/12
 f 3/38/12 7/25/12 15/27/12
 )";
 
+
 	LoadObj();
 }
 
@@ -1009,6 +1011,7 @@ f 2/1/1 4/4/1 3/2/1
 f 4/4/2 6/9/2 5/5/2
 f 6/9/4 2/14/4 1/10/4
 )";
+
 
 	LoadObj();
 }

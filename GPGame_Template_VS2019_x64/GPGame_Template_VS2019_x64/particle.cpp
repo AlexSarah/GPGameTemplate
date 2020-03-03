@@ -7,8 +7,6 @@ using namespace std;
 #include "emitter.h"
 #define rad glm::radians
 
-    int id;
-
     //Default Constructor 
     Particle::Particle()
     {
@@ -23,13 +21,6 @@ using namespace std;
         orientation = o;
         shapePcl = shape;
     }   
-
-    void Particle::load() {
-        //active = 1;
-        //dead = false;
-        shapePcl.Load();
-        setColor();
-    }
 
     void Particle::update() {
         GLfloat t = (GLfloat)glfwGetTime();
