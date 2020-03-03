@@ -27,8 +27,8 @@ GameObject::GameObject(int id_param, int object_type_param, int figure_type_para
 		figure = Line();
 		break;
 	case 6:
-		nbPcl = 1;
-		figure = Cube();
+		nbPcl = 720;
+		figure = Sphere();
 		scaling = glm::vec3(0.1f, 0.1f, 0.1f);
 		//if (figure_type_param == 1) 
 			//figure = Cube();
@@ -50,7 +50,6 @@ void		GameObject::CollisionBox()
 	collision.Load();
 
 }
-
 
 
 void GameObject::update_collision_scale_and_values()
@@ -160,7 +159,6 @@ void GameObject::createFountain(Shapes shape) {
 		particles.push_back(new Particle());
 		particles[i]->id=i;
 		particles[i]->init(glm::vec3(0.0f, 0.0f, 0.0f), o, shape);
-		particles[i]->shapePcl.Load();
 		o += 1.0; // +1 degree
 		cout << particles[i]->id;
 	}

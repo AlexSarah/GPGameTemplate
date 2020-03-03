@@ -118,6 +118,7 @@ void startup(Game *game) {
 			case 6: // for particule explosion
 				for (int j=0; j < game->game_element[i].nbPcl; j++) {
 					game->game_element[i].particles[j]->setColor();
+					game->game_element[i].particles[j]->shapePcl.Load();
 				}
 		}
 
@@ -224,9 +225,8 @@ void updateSceneElements(Game* game) {
 			case 6:
 				for (int j=0; j < game->game_element[i].nbPcl; j++) {
 
-					game->game_element[i].particles[j]->setColor();
 					if (game->game_element[i].particles[j]->dead == true) {
-						int r = rand() % 6;
+						int r = rand() % 15;
 						if (r == 0) {
 							game->game_element[i].particles[j]->dead = false;
 							game->game_element[i].particles[j]->birthTime = currentTime;
@@ -238,12 +238,12 @@ void updateSceneElements(Game* game) {
 							glm::translate(glm::vec3(game->game_element[i].particles[j]->position.x,
 								game->game_element[i].particles[j]->position.y, 
 								game->game_element[i].particles[j]->position.z)) *
+							glm::scale(game->game_element[i].scaling) *
 							glm::mat4(1.0f);
 						game->game_element[i].particles[j]->shapePcl.mv_matrix = myGraphics.viewMatrix * mv_matrix_sphere;
 						game->game_element[i].particles[j]->shapePcl.proj_matrix = myGraphics.proj_matrix;
 						game->game_element[i].particles[j]->setColor();
-					}
-				
+					}	
 				}
 		}
 	}
@@ -373,11 +373,13 @@ void renderScene(Game* game) {
 	// Draw objects in screen
 
 	for (int i = 0; i < game->game_element.size(); i++) {
-		if (game->game_element[i].type != 6)
+	if (game->game_element[i].type != 6)
 			game->game_element[i].figure.Draw();
 		else {
 			for (int j = 0; j < game->game_element[i].nbPcl; j++) {
+				if (game->game_element[i].particles[j]->dead == false)
 				game->game_element[i].particles[j]->shapePcl.Draw();
+				cout << "HELLO";
 			}
 		}	// I don't draw the collision box, they just need to be calculated though.
 	}
@@ -514,6 +516,7 @@ int main()
 		// Swap the back buffer with the front buffer, making the most recently rendered image visible on-screen.
 		glfwSwapBuffers(myGraphics.window);        // swap buffers (avoid flickering and tearing)
 
+		//while (1) {}
 	}
 
 	myGraphics.endProgram();            // Close and clean everything up...

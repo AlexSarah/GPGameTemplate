@@ -24,7 +24,7 @@ using namespace std;
 
     void Particle::update() {
         GLfloat t = (GLfloat)glfwGetTime();
-        float v0 = 18;
+        float v0 = 10;
         position.x = (v0 * cos(rad(80.0f)) * (t-birthTime) + pos0.x) * cos(rad(orientation));
         position.y = v0 * sin(rad(80.0f)) * (t-birthTime) - 0.5 * 9.81 * pow((t-birthTime), 2) + pos0.y;
         position.z = (v0 * cos(rad(80.0f)) * (t-birthTime) + pos0.x) * sin(rad(orientation));
