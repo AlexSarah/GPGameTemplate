@@ -13,6 +13,9 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
+    <Filter Include="Object">
+      <UniqueIdentifier>{5ce82389-b490-49a0-8153-c784817b7b30}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="GPGame_Template_VS2019_x64.cpp">
@@ -56,6 +59,9 @@
   </ItemGroup>
   <ItemGroup>
     <Text Include="map.txt">
+      <Filter>Source Files</Filter>
+    </Text>
+    <Text Include="Object.txt">
       <Filter>Source Files</Filter>
     </Text>
   </ItemGroup>

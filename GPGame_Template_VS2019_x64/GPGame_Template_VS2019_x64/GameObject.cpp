@@ -13,6 +13,8 @@ GameObject::GameObject(int id_param, int object_type_param, int figure_type_para
 			scaling = glm::vec3(1.0f, 2.0f, 0.4f);
 		else if (figure_type_param == 2)
 			scaling = glm::vec3(1000.0f, 0.001f, 1000.0f);
+		else
+			translation = glm::vec3(5.0f, 0.5f, 0.0f);
 		break;
 	case 2:
 		figure = Sphere();

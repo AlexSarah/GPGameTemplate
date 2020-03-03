@@ -1,7 +1,27 @@
 ﻿  GPGame_Template_VS2019_x64.cpp
-D:\Repos2\ReposFinal\GPGame_Template_VS2019_x64\GPGame_Template_VS2019_x64\GPGame_Template_VS2019_x64.cpp(463,44): warning C4267: '=' : conversion de 'size_t' en 'int', perte possible de données
-D:\Repos2\ReposFinal\GPGame_Template_VS2019_x64\GPGame_Template_VS2019_x64\GPGame_Template_VS2019_x64.cpp(471,44): warning C4267: '=' : conversion de 'size_t' en 'int', perte possible de données
-D:\Repos2\ReposFinal\GPGame_Template_VS2019_x64\GPGame_Template_VS2019_x64\GPGame_Template_VS2019_x64.cpp(476,30): warning C4305: '-=' : troncation de 'double' à 'T'
+D:\Repos2\ReposFinal\GPGame_Template_VS2019_x64\GPGame_Template_VS2019_x64\GPGame_Template_VS2019_x64.cpp(180,79): warning C4244: '=' : conversion de 'double' en 'T', perte possible de données
+          with
+          [
+              T=float
+          ]
+D:\Repos2\ReposFinal\GPGame_Template_VS2019_x64\GPGame_Template_VS2019_x64\GPGame_Template_VS2019_x64.cpp(184,78): warning C4244: '=' : conversion de 'double' en 'T', perte possible de données
+          with
+          [
+              T=float
+          ]
+D:\Repos2\ReposFinal\GPGame_Template_VS2019_x64\GPGame_Template_VS2019_x64\GPGame_Template_VS2019_x64.cpp(189,79): warning C4244: '=' : conversion de 'double' en 'T', perte possible de données
+          with
+          [
+              T=float
+          ]
+D:\Repos2\ReposFinal\GPGame_Template_VS2019_x64\GPGame_Template_VS2019_x64\GPGame_Template_VS2019_x64.cpp(194,78): warning C4244: '=' : conversion de 'double' en 'T', perte possible de données
+          with
+          [
+              T=float
+          ]
+D:\Repos2\ReposFinal\GPGame_Template_VS2019_x64\GPGame_Template_VS2019_x64\GPGame_Template_VS2019_x64.cpp(494,44): warning C4267: '=' : conversion de 'size_t' en 'int', perte possible de données
+D:\Repos2\ReposFinal\GPGame_Template_VS2019_x64\GPGame_Template_VS2019_x64\GPGame_Template_VS2019_x64.cpp(503,44): warning C4267: '=' : conversion de 'size_t' en 'int', perte possible de données
+D:\Repos2\ReposFinal\GPGame_Template_VS2019_x64\GPGame_Template_VS2019_x64\GPGame_Template_VS2019_x64.cpp(508,30): warning C4305: '-=' : troncation de 'double' à 'T'
           with
           [
               T=float
