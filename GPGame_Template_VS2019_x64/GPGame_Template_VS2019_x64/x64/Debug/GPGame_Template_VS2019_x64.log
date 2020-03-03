@@ -1,2 +1,2 @@
 ﻿  GPGame_Template_VS2019_x64.cpp
-  GPGame_Template_VS2019_x64.vcxproj -> D:\Repos2\ReposFinal\GPGame_Template_VS2019_x64\x64\Debug\GPGame_Template_VS2019_x64.exe
+C:\Users\user\Documents\HW\CGP\CW\CODE\GPGame_Template_VS2019_x64\GPGame_Template_VS2019_x64\GPGame_Template_VS2019_x64.cpp(376,4): error C3861: 'Sleep': identifier not found

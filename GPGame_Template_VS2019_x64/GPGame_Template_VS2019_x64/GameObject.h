@@ -67,7 +67,7 @@ public:
 
 	Shapes			figure;
 	Shapes			collision;
-	vector<Particle> particles;
+	vector<Particle*> particles;
 	vector<Shapes> particles_collisions;
 	int nbPcl;
 

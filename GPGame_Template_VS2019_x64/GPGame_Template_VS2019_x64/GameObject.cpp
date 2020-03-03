@@ -27,12 +27,11 @@ GameObject::GameObject(int id_param, int object_type_param, int figure_type_para
 		figure = Line();
 		break;
 	case 6:
-		nbPcl = 360;
-		figure = Sphere();
+		nbPcl = 1;
+		figure = Cube();
 		scaling = glm::vec3(0.1f, 0.1f, 0.1f);
-		if (figure_type_param == 1) {
-			figure = Cube();
-		}
+		//if (figure_type_param == 1) 
+			//figure = Cube();
 		createFountain(figure);
 		break;
 	}
@@ -158,9 +157,11 @@ void		GameObject::figure_center()
 void GameObject::createFountain(Shapes shape) {
 	float o = 0.0;
 	for (int i = 0; i < nbPcl; i++) {
-		Particle p;
-		particles.push_back(p);
-		p.init(glm::vec3(0.0f, 0.0f, 0.0f), o, shape);
+		particles.push_back(new Particle());
+		particles[i]->id=i;
+		particles[i]->init(glm::vec3(0.0f, 0.0f, 0.0f), o, shape);
+		particles[i]->shapePcl.Load();
 		o += 1.0; // +1 degree
+		cout << particles[i]->id;
 	}
 }

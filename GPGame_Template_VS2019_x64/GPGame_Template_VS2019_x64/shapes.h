@@ -33,6 +33,7 @@ public:
 	glm::vec4		lineColor = glm::vec4(0.0, 0.0, 0.0, 1.0);
 	float			lineWidth = 2.0f;
 
+
 protected:
 	string rawData;			// Import obj file from Blender (note: no textures or UVs).
 	void LoadObj();

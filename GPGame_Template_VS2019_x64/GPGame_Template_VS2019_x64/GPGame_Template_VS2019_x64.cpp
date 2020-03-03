@@ -72,15 +72,6 @@ void startup(Game *game) {
 	myGraphics.aspect = (float)myGraphics.windowWidth / (float)myGraphics.windowHeight;
 	myGraphics.proj_matrix = glm::perspective(glm::radians(50.0f), myGraphics.aspect, 0.1f, 1000.0f);
 
-
-//Particle explosion
-		//e.create(360); //create 360 particles and load them
-	/*if (p.lifespan == 1) {
-		p.load(); 
-		p.init(glm::vec3(0.0f, 0.0f, 0.0f),10.0f);
-	}*/
-
-
 //Setting up colors
 	for (int i=0 ; i < game->game_element.size(); i++)
 	{
@@ -119,11 +110,13 @@ void startup(Game *game) {
 						game->game_element[i].figure.fillColor = glm::vec4(0.0f, 0.0f, 1.0f, 1.0f); game->game_element[i].figure.lineColor = glm::vec4(0.0f, 0.0f, 1.0f, 1.0f);
 					}
 					break;
+			case 6: // for particule explosion
+				for (int j=0; j < game->game_element[i].nbPcl; j++) {
+					game->game_element[i].particles[j]->setColor();
+				}
 		}
 
 	}
-
-
 
 		//For the line
 		/*game->game_element[6].figure.fillColor = glm::vec4(1.0f, 1.0f, 1.0f, 1.0f);
@@ -196,27 +189,6 @@ void updateSceneElements(Game* game) {
 
 	// Do not forget your ( T * R * S ) http://www.opengl-tutorial.org/beginners-tutorials/tutorial-3-matrices/
 
-	//Particle explosion
-	/*for (int i = 0; i < e.nbPcl; i++) { //for each particle
-		if (e.p[i].dead == true) {
-			int r = rand() % 6;
-			if (r == 0) {
-				e.p[i].dead = false;
-				e.p[i].birthTime = currentTime;
-			}
-		}
-		if (e.p[i].dead == false) {
-			e.p[i].update();
-			glm::mat4 mv_matrix_sphere =
-				glm::scale(glm::vec3(0.1f, 0.1f, 0.1f)) *
-				glm::translate(glm::vec3(e.p[i].position.x, e.p[i].position.y, e.p[i].position.z)) *
-				glm::mat4(1.0f);
-			e.p[i].shapePcl.mv_matrix = myGraphics.viewMatrix * mv_matrix_sphere;
-			e.p[i].shapePcl.proj_matrix = myGraphics.proj_matrix;
-			e.p[i].setColor();
-		}
-	}*/
-
 
 	for (int i = 0; i < game->game_element.size(); i++)
 	{
@@ -243,6 +215,30 @@ void updateSceneElements(Game* game) {
 					game->game_element[i].figure.proj_matrix = myGraphics.proj_matrix;
 				}
 				break;
+			case 6:
+				for (int j=0; j < game->game_element[i].nbPcl; j++) {
+
+					game->game_element[i].particles[j]->setColor();
+					if (game->game_element[i].particles[j]->dead == true) {
+						int r = rand() % 6;
+						if (r == 0) {
+							game->game_element[i].particles[j]->dead = false;
+							game->game_element[i].particles[j]->birthTime = currentTime;
+						}
+					}
+					if (game->game_element[i].particles[j]->dead == false) {
+						game->game_element[i].particles[j]->update();
+						glm::mat4 mv_matrix_sphere =
+							glm::translate(glm::vec3(game->game_element[i].particles[j]->position.x,
+								game->game_element[i].particles[j]->position.y, 
+								game->game_element[i].particles[j]->position.z)) *
+							glm::mat4(1.0f);
+						game->game_element[i].particles[j]->shapePcl.mv_matrix = myGraphics.viewMatrix * mv_matrix_sphere;
+						game->game_element[i].particles[j]->shapePcl.proj_matrix = myGraphics.proj_matrix;
+						game->game_element[i].particles[j]->setColor();
+					}
+				
+				}
 		}
 	}
 	// Calculate Cube position
@@ -368,18 +364,18 @@ void renderScene(Game* game) {
 		}
 	}*/
 
-	loop += 1;
-	std::cout << "\n number of loops : " << loop;
-	/*if (p.lifespan == 1) {
-		p.shapePcl.Draw();
-	}*/
-
-		
 	// Draw objects in screen
 
-	for (int i = 0; i < game->game_element.size(); i++)
+	for (int i = 0; i < game->game_element.size(); i++) {
+		if (game->game_element[i].type != 6)
 			game->game_element[i].figure.Draw();
-	// I don't draw the collision box, they just need to be calculated though.
+		else {
+			for (int j = 0; j < game->game_element[i].nbPcl; j++) {
+				game->game_element[i].particles[j]->shapePcl.Draw();
+			}
+			sleep_for(3000);
+		}	// I don't draw the collision box, they just need to be calculated though.
+	}
 }
 
 
@@ -449,6 +445,7 @@ int main()
 	game.game_element.push_back(GameObject(7, 1, 2));
 	/*game.game_element.push_back(GameObject(8, 5, 0));
 	game.game_element.push_back(GameObject(9, 3, 0));*/
+	game.game_element.push_back(GameObject(10, 6, 0));
 	
 	startup(&game);										// Setup all necessary information for startup (aka. load texture, shaders, models, etc).
 
