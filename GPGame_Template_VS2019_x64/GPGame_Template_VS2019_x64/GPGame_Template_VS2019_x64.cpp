@@ -227,6 +227,7 @@ void updateCamera(Game* game) {
 					if (game->game_element[a].type != 6 && game->game_element[a].id != 7 && game->game_element[a].id != 89)
 						if (check_if_collision(game->game_element[i], game->game_element[a]) == true)
 							game->game_element[i].touched = true;
+					
 				}
 				if (game->game_element[i].touched == false)
 					game->game_element[i].translation.x = game->game_element[i].translation.x + 0.1;
@@ -243,10 +244,12 @@ void updateCamera(Game* game) {
 				for (int a = 0; a < game->game_element.size(); a++)
 				{
 					if (game->game_element[a].type != 6 && game->game_element[a].id != 7 && game->game_element[a].id != 89)
+					{
 						if (check_if_collision(game->game_element[i], game->game_element[a]) == true)
 						{
 							game->game_element[i].touched = true;
 						}
+					}
 				}
 				if (game->game_element[i].touched == false)
 					game->game_element[i].translation.x = game->game_element[i].translation.x - 0.1;
@@ -356,13 +359,40 @@ void updateSceneElements(Game* game) {
 						game->game_element[i].translation = glm::vec3(game->game_element[i].particles[j]->position.x,
 							game->game_element[i].particles[j]->position.y,
 							game->game_element[i].particles[j]->position.z);
+
+						game->game_element[i].figure_center(0);
+
+						//Check if there is a collision with others gameobjects elements, including particles
+						for (int a = 0; a < game->game_element.size(); a++)
+						{
+								game->game_element[i].update_possible_transformation(game->game_element[i].translation, game->game_element[i].rotation, game->game_element[i].scaling, game->game_element[i].angle);
+								game->game_element[i].figure_center(1);
+								for (int a = 0; a < game->game_element.size(); a++)
+								{
+									if (game->game_element[a].id != 7)
+									{
+										if (check_if_collision(game->game_element[i], game->game_element[a]) == true)
+										{
+											game->game_element[i].touched = true;
+											cout << "Ca touche !" << endl;
+											break;
+										}
+									}
+								}
+								if (game->game_element[i].touched == true)
+									break;
+							}
+
+						game->game_element[i].touched = false;
+
+					//End of the check ; Do whatever you want with particles behaviour behind, inside the check_collision condition, if it's true.
+
 						glm::mat4 mv_matrix_sphere =
 							glm::translate(glm::vec3(game->game_element[i].particles[j]->position.x,
 								game->game_element[i].particles[j]->position.y, 
 								game->game_element[i].particles[j]->position.z)) *
 							glm::scale(game->game_element[i].scaling) *
 							glm::mat4(1.0f);
-						game->game_element[i].figure_center(0);
 
 						game->game_element[i].particles[j]->shapePcl.mv_matrix = myGraphics.viewMatrix * mv_matrix_sphere;
 						game->game_element[i].particles[j]->shapePcl.proj_matrix = myGraphics.proj_matrix;
