@@ -210,6 +210,13 @@ bool		check_if_collision(Game* game)
 	;
 }
 
+
+void		move(glm::vec3 param_translation, glm::vec3 param_scaling, glm::vec3 param_rotation)
+{
+
+}
+
+
 void updateSceneElements(Game* game) {
 
 	glfwPollEvents();                                // poll callbacks

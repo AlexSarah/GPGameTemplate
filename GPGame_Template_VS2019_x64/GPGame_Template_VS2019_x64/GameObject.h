@@ -52,9 +52,13 @@ public:
 	glm::vec3	rotation_2 = glm::vec3(0.0f, 0.0f, 1.0f);
 	glm::vec3	rotation_3 = glm::vec3(0.0f, 0.0f, 0.0f);
 
+	//Important vectors for collision testing
 	glm::vec3	collision_scaling = glm::vec3(1.0f, 1.0f, 1.0f);
 	glm::vec3	max_figure_values = glm::vec3(0.0f, 0.0f, 0.0f);
 	glm::vec3	min_figure_values = glm::vec3(0.0f, 0.0f, 0.0f);
+	glm::vec3	translation_4_collision = glm::vec3(0.0f, 0.0f, 0.0f);
+	glm::vec3	scaling_4_collision = glm::vec3(1.0f, 1.0f, 1.0f);
+	glm::vec3	rotation_4_collision = glm::vec3(0.0f, .0f, 1.0f);
 
 
 	int				id;
