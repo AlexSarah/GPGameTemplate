@@ -133,7 +133,17 @@ void startup(Game *game) {
 		myGraphics.SetOptimisations();        // Cull and depth testing
 }
 
-void updateCamera(Game *game) {
+
+bool		check_if_collision(GameObject first, GameObject second)
+{
+
+	return (first.min_figure_values.x < second.max_figure_values.x && first.max_figure_values.x > second.min_figure_values.x)
+		&& (first.min_figure_values.y < second.max_figure_values.y && first.max_figure_values.y > second.min_figure_values.y)
+		&& (first.min_figure_values.z < second.max_figure_values.z && first.max_figure_values.z > second.min_figure_values.z);
+}
+
+
+void updateCamera(Game* game) {
 
 	// calculate movement for FPS camera
 	GLfloat xoffset = myGraphics.mouseX - myGraphics.cameraLastX;
@@ -173,21 +183,76 @@ void updateCamera(Game *game) {
 	if (game->keyStatus[GLFW_KEY_T])
 		for (int i = 0; i < game->game_element.size(); i++)
 			if (game->game_element[i].id == 89)
-				game->game_element[i].translation.z = game->game_element[i].translation.z + 0.1;
+			{
+				game->game_element[i].update_possible_transformation(glm::vec3(game->game_element[i].translation.x, game->game_element[i].translation.y, game->game_element[i].translation.z+0.1f), game->game_element[i].rotation, game->game_element[i].scaling, game->game_element[i].angle);
+				game->game_element[i].figure_center(1);
+				for (int a = 0; a < game->game_element.size(); a++)
+				{
+					if (game->game_element[a].type != 6 && game->game_element[a].id != 7 && game->game_element[a].id != 89)
+						if (check_if_collision(game->game_element[i], game->game_element[a]) == true)
+						{
+							game->game_element[i].touched = true;
+						}
+				}
+				if (game->game_element[i].touched == false)
+					game->game_element[i].translation.z = game->game_element[i].translation.z + 0.1;
+				game->game_element[i].touched = false;
+				break;
+			}
 	if (game->keyStatus[GLFW_KEY_G])
 		for (int i = 0; i < game->game_element.size(); i++)
-		if (game->game_element[i].id == 89)
-			game->game_element[i].translation.z = game->game_element[i].translation.z - 0.1;
+			if (game->game_element[i].id == 89)
+			{
+				game->game_element[i].update_possible_transformation(glm::vec3(game->game_element[i].translation.x, game->game_element[i].translation.y, game->game_element[i].translation.z - 0.1), game->game_element[i].rotation, game->game_element[i].scaling, game->game_element[i].angle);
+				game->game_element[i].figure_center(1);
+				for (int a = 0; a < game->game_element.size(); a++)
+				{
+					if (game->game_element[a].type != 6 && game->game_element[a].id != 7 && game->game_element[a].id != 89)
+						if (check_if_collision(game->game_element[i], game->game_element[a]) == true)
+							game->game_element[i].touched = true;
+				}
+				if (game->game_element[i].touched == false)
+					game->game_element[i].translation.z = game->game_element[i].translation.z - 0.1;
+				game->game_element[i].touched = false;
+			}
 
 	if (game->keyStatus[GLFW_KEY_F])
 		for (int i = 0; i < game->game_element.size(); i++)
 			if (game->game_element[i].id == 89)
-				game->game_element[i].translation.x = game->game_element[i].translation.x + 0.1;
+			{
+				game->game_element[i].update_possible_transformation(glm::vec3(game->game_element[i].translation.x + 0.1f, game->game_element[i].translation.y, game->game_element[i].translation.z), game->game_element[i].rotation, game->game_element[i].scaling, game->game_element[i].angle);
+				game->game_element[i].figure_center(1);
+				for (int a = 0; a < game->game_element.size(); a++)
+				{
+					if (game->game_element[a].type != 6 && game->game_element[a].id != 7 && game->game_element[a].id != 89)
+						if (check_if_collision(game->game_element[i], game->game_element[a]) == true)
+							game->game_element[i].touched = true;
+				}
+				if (game->game_element[i].touched == false)
+					game->game_element[i].translation.x = game->game_element[i].translation.x + 0.1;
+				game->game_element[i].touched = false;
+				break;
+			}
 
 	if (game->keyStatus[GLFW_KEY_H])
-	for (int i = 0; i < game->game_element.size(); i++)
-		if (game->game_element[i].id == 89)
-			game->game_element[i].translation.x = game->game_element[i].translation.x - 0.1;
+		for (int i = 0; i < game->game_element.size(); i++)
+			if (game->game_element[i].id == 89)
+			{
+				game->game_element[i].update_possible_transformation(glm::vec3(game->game_element[i].translation.x - 0.1f, game->game_element[i].translation.y, game->game_element[i].translation.z), game->game_element[i].rotation, game->game_element[i].scaling, game->game_element[i].angle);
+				game->game_element[i].figure_center(1);
+				for (int a = 0; a < game->game_element.size(); a++)
+				{
+					if (game->game_element[a].type != 6 && game->game_element[a].id != 7 && game->game_element[a].id != 89)
+						if (check_if_collision(game->game_element[i], game->game_element[a]) == true)
+						{
+							game->game_element[i].touched = true;
+						}
+				}
+				if (game->game_element[i].touched == false)
+					game->game_element[i].translation.x = game->game_element[i].translation.x - 0.1;
+				game->game_element[i].touched = false;
+				break;
+			}
 	
 	// IMPORTANT PART
 	// Calculate my view matrix using the lookAt helper function
@@ -196,14 +261,6 @@ void updateCamera(Game *game) {
 			myGraphics.cameraPosition + myGraphics.cameraFront,					// centre
 			myGraphics.cameraUp);												// up
 	}
-}
-
-bool		check_if_collision(Game* game)
-{
-	return (game->game_element[0].min_figure_values.x <= game->game_element[1].max_figure_values.x && game->game_element[0].max_figure_values.x >= game->game_element[1].min_figure_values.x)
-		&& (game->game_element[0].min_figure_values.y <= game->game_element[1].max_figure_values.y && game->game_element[0].max_figure_values.y >= game->game_element[1].min_figure_values.y)
-		&& (game->game_element[0].min_figure_values.z <= game->game_element[1].max_figure_values.z && game->game_element[0].max_figure_values.z >= game->game_element[1].min_figure_values.z);
-	;
 }
 
 
@@ -232,32 +289,56 @@ void updateSceneElements(Game* game) {
 			case 1:
 				if (game->game_element[i].subtype == 1) // The Wall are immobiles
 				{
-					game->game_element[0].translation = glm::vec3(1, 1.0f, 0.0f);
-					game->game_element[i].figure_center();
+					game->game_element[i].figure_center(0);
 					game->game_element[i].figure.mv_matrix = myGraphics.viewMatrix *
 						glm::translate(game->game_element[i].translation) *
 						glm::rotate(glm::radians(game->game_element[i].angle), game->game_element[i].rotation) *
 						glm::scale(game->game_element[i].scaling) *
 						glm::mat4(1.0f);
 					game->game_element[i].figure.proj_matrix = myGraphics.proj_matrix;
+
+					glm::mat4 mv_matrix_collision = myGraphics.viewMatrix *
+						glm::translate(glm::mat4(1), game->game_element[i].translation) *
+						glm::scale(game->game_element[i].collision_scaling) *
+						glm::mat4(1.0f);
+					game->game_element[i].collision.mv_matrix = mv_matrix_collision;
+					game->game_element[i].collision.proj_matrix = myGraphics.proj_matrix;
+
 				}
 				else if (game->game_element[i].subtype == 2) // The ground is immobile
 				{
-					game->game_element[i].figure_center();
+					game->game_element[i].figure_center(0);
 					game->game_element[i].figure.mv_matrix = myGraphics.viewMatrix *
 						glm::translate(game->game_element[i].translation) *
 						glm::scale(game->game_element[i].scaling) *
 						glm::mat4(1.0f);
 					game->game_element[i].figure.proj_matrix = myGraphics.proj_matrix;
+
+
+					glm::mat4 mv_matrix_collision = myGraphics.viewMatrix *
+						glm::translate(glm::mat4(1), game->game_element[i].translation) *
+						glm::scale(game->game_element[i].collision_scaling) *
+						glm::mat4(1.0f);
+					game->game_element[i].collision.mv_matrix = mv_matrix_collision;
+					game->game_element[i].collision.proj_matrix = myGraphics.proj_matrix;
 				}
 				else
 				{
-					game->game_element[i].figure_center();
+
+					game->game_element[i].figure_center(0);
 					game->game_element[i].figure.mv_matrix = myGraphics.viewMatrix *
 						glm::translate(game->game_element[i].translation) *
 						glm::scale(game->game_element[i].scaling) *
 						glm::mat4(1.0f);
 					game->game_element[i].figure.proj_matrix = myGraphics.proj_matrix;
+
+
+					glm::mat4 mv_matrix_collision = myGraphics.viewMatrix *
+						glm::translate(glm::mat4(1), game->game_element[i].translation) *
+						glm::scale(game->game_element[i].collision_scaling) *
+						glm::mat4(1.0f);
+					game->game_element[i].collision.mv_matrix = mv_matrix_collision;
+					game->game_element[i].collision.proj_matrix = myGraphics.proj_matrix;
 				}
 				break;
 			case 6:
@@ -272,15 +353,28 @@ void updateSceneElements(Game* game) {
 					}
 					if (game->game_element[i].particles[j]->dead == false) {
 						game->game_element[i].particles[j]->update();
+						game->game_element[i].translation = glm::vec3(game->game_element[i].particles[j]->position.x,
+							game->game_element[i].particles[j]->position.y,
+							game->game_element[i].particles[j]->position.z);
 						glm::mat4 mv_matrix_sphere =
 							glm::translate(glm::vec3(game->game_element[i].particles[j]->position.x,
 								game->game_element[i].particles[j]->position.y, 
 								game->game_element[i].particles[j]->position.z)) *
 							glm::scale(game->game_element[i].scaling) *
 							glm::mat4(1.0f);
+						game->game_element[i].figure_center(0);
+
 						game->game_element[i].particles[j]->shapePcl.mv_matrix = myGraphics.viewMatrix * mv_matrix_sphere;
 						game->game_element[i].particles[j]->shapePcl.proj_matrix = myGraphics.proj_matrix;
 						game->game_element[i].particles[j]->setColor();
+
+						
+						glm::mat4 mv_matrix_collision = myGraphics.viewMatrix *
+							glm::translate(glm::mat4(1), game->game_element[i].translation) *
+							glm::scale(game->game_element[i].collision_scaling) *
+							glm::mat4(1.0f);
+						game->game_element[i].collision.mv_matrix = mv_matrix_collision;
+						game->game_element[i].collision.proj_matrix = myGraphics.proj_matrix;
 					}	
 				}
 		}
@@ -411,13 +505,16 @@ void renderScene(Game* game) {
 	// Draw objects in screen
 
 	for (int i = 0; i < game->game_element.size(); i++) {
-	if (game->game_element[i].type != 6)
+		if (game->game_element[i].type != 6)
+		{
 			game->game_element[i].figure.Draw();
+			game->game_element[i].collision.Draw();
+			
+		}
 		else {
 			for (int j = 0; j < game->game_element[i].nbPcl; j++) {
 				if (game->game_element[i].particles[j]->dead == false)
 				game->game_element[i].particles[j]->shapePcl.Draw();
-				cout << "HELLO";
 			}
 		}	// I don't draw the collision box, they just need to be calculated though.
 	}

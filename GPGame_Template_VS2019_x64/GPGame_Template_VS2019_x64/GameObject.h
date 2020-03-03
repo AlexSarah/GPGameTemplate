@@ -56,9 +56,11 @@ public:
 	glm::vec3	collision_scaling = glm::vec3(1.0f, 1.0f, 1.0f);
 	glm::vec3	max_figure_values = glm::vec3(0.0f, 0.0f, 0.0f);
 	glm::vec3	min_figure_values = glm::vec3(0.0f, 0.0f, 0.0f);
-	glm::vec3	translation_4_collision = glm::vec3(0.0f, 0.0f, 0.0f);
-	glm::vec3	scaling_4_collision = glm::vec3(1.0f, 1.0f, 1.0f);
-	glm::vec3	rotation_4_collision = glm::vec3(0.0f, .0f, 1.0f);
+	glm::vec3	possible_translation = glm::vec3(0.0f, 0.0f, 0.0f);
+	glm::vec3	possible_scaling = glm::vec3(1.0f, 1.0f, 1.0f);
+	glm::vec3	possible_rotation = glm::vec3(0.0f, .0f, 1.0f);
+	float		possible_angle = 0.0f;
+
 
 
 	int				id;
@@ -80,12 +82,16 @@ public:
 
 	int  lifespan;
 	bool dead;
+	bool touched = false;
+	glm::vec3	touched_plan;
 
 	//Methods
 	GameObject(int id, int type, int subtype);
 	void CollisionBox();
-	void figure_center();
+	void figure_center(int mode);
 	void update_collision_scale_and_values();
 	glm::vec4 	matrices_mul(glm::mat4, glm::vec4);
 	void createFountain(Shapes shape);
+	void update_possible_transformation(glm::vec3 translation, glm::vec3 rotation, glm::vec3 scaling, float a_angle);
+
 };

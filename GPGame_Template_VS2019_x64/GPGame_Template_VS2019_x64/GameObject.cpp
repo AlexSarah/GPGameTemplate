@@ -29,7 +29,7 @@ GameObject::GameObject(int id_param, int object_type_param, int figure_type_para
 		figure = Line();
 		break;
 	case 6:
-		nbPcl = 720;
+		nbPcl = 10;
 		figure = Sphere();
 		scaling = glm::vec3(0.1f, 0.1f, 0.1f);
 		//if (figure_type_param == 1) 
@@ -39,7 +39,7 @@ GameObject::GameObject(int id_param, int object_type_param, int figure_type_para
 	}
 	 if (object_type_param != 6)
 		 figure.Load();
-	figure_center();
+	figure_center(0);
 	CollisionBox();
 	collision.fillColor = glm::vec4(0.0f, 1.0f, 0.0f, 0.0f);
 	collision.lineColor = glm::vec4(0.0f, 1.0f, 0.0f, 1.0f);
@@ -96,7 +96,7 @@ glm::vec4 	GameObject::matrices_mul(glm::mat4 mv_matrix_cube, glm::vec4 coordina
 	return screen_coordinates;
 }
 
-void		GameObject::figure_center()
+void		GameObject::figure_center(int mode)
 {
 	int		i = 0;
 	int		j = 0;
@@ -104,9 +104,17 @@ void		GameObject::figure_center()
 	GLfloat min_x, max_x,
 		min_y, max_y,
 		min_z, max_z;
+	glm::mat4 mat_transformation(1.0f);
 
+	if (mode == 0)
+		mat_transformation = glm::translate(glm::vec3(translation)) * glm::rotate(glm::radians(angle), rotation) * glm::scale(scaling) * glm::mat4(1.0f);
+	else if (mode == 1)
+		mat_transformation = glm::translate(glm::vec3(possible_translation)) * glm::rotate(glm::radians(possible_angle), possible_rotation) * glm::scale(possible_scaling) * glm::mat4(1.0f);
+	/*if (mode == 1)
+		mat_transformation = glm::translate(glm::vec3(translation)) * glm::rotate(angle, rotation) * glm::scale(scaling) * glm::mat4(1.0f);*/
+	/*else if (mode == 2)
+		glm::mat4 mat_transformation = glm::translate(glm::vec3(translation)) * glm::rotate(angle, rotation) * glm::scale(possible_scaling) * glm::mat4(1.0f);*/
 
-	glm::mat4 mat_transformation = glm::translate(glm::vec3(translation)) * glm::rotate(angle, rotation) * glm::scale(scaling) * glm::mat4(1.0f);
 	float	x = 0, y = 0, z = 0, w = 0;
 	test = matrices_mul(mat_transformation, glm::vec4(figure.vertexPositions[0], figure.vertexPositions[1], figure.vertexPositions[2], 1));
 	min_x = max_x = test.x;
@@ -143,7 +151,7 @@ void		GameObject::figure_center()
 	y = y / (figure.vertexPositions.size() / 3);
 	z = z / (figure.vertexPositions.size() / 3);
 	w = w / (figure.vertexPositions.size() / 3);
-	collision_scaling = glm::vec3(abs(max_x - min_x), abs(max_y - min_y), abs(max_z - min_z) + 0.2);
+	collision_scaling = glm::vec3(abs(max_x - min_x), abs(max_y - min_y), abs(max_z - min_z));
 	glm::vec3 center_object(x, y, z);
 	worldcenter_position = center_object;
 
@@ -164,4 +172,16 @@ void GameObject::createFountain(Shapes shape) {
 		o += 1.0; // +1 degree
 		cout << particles[i]->id;
 	}
+}
+
+
+
+void GameObject::update_possible_transformation(glm::vec3 a_translation, glm::vec3 a_rotation, glm::vec3 a_scaling, float a_angle)
+{
+	possible_translation = a_translation;
+	possible_rotation = a_rotation;
+	possible_scaling = a_scaling;
+	possible_angle = a_angle;
+
+	figure_center(0);
 }
