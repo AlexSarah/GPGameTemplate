@@ -192,6 +192,7 @@ void updateCamera(Game* game) {
 						if (check_if_collision(game->game_element[i], game->game_element[a]) == true)
 						{
 							game->game_element[i].touched = true;
+							game->game_element[a].translation.z = game->game_element[a].translation.z + 0.1f;
 						}
 				}
 				if (game->game_element[i].touched == false)
@@ -209,7 +210,10 @@ void updateCamera(Game* game) {
 				{
 					if (game->game_element[a].type != 6 && game->game_element[a].id != 7 && game->game_element[a].id != 89)
 						if (check_if_collision(game->game_element[i], game->game_element[a]) == true)
+						{
 							game->game_element[i].touched = true;
+							game->game_element[a].translation.z = game->game_element[a].translation.z - 0.1f;
+						}
 				}
 				if (game->game_element[i].touched == false)
 					game->game_element[i].translation.z = game->game_element[i].translation.z - 0.1;
@@ -226,7 +230,10 @@ void updateCamera(Game* game) {
 				{
 					if (game->game_element[a].type != 6 && game->game_element[a].id != 7 && game->game_element[a].id != 89)
 						if (check_if_collision(game->game_element[i], game->game_element[a]) == true)
+						{
 							game->game_element[i].touched = true;
+							game->game_element[a].translation.x = game->game_element[a].translation.x + 0.1f;
+						}
 					
 				}
 				if (game->game_element[i].touched == false)
@@ -248,6 +255,8 @@ void updateCamera(Game* game) {
 						if (check_if_collision(game->game_element[i], game->game_element[a]) == true)
 						{
 							game->game_element[i].touched = true;
+							game->game_element[a].translation.x = game->game_element[a].translation.x - 0.1f;
+
 						}
 					}
 				}
@@ -257,6 +266,9 @@ void updateCamera(Game* game) {
 				break;
 			}
 	
+
+	//if (game->keyStatus[GLFW_KEY_SPACE])
+
 	// IMPORTANT PART
 	// Calculate my view matrix using the lookAt helper function
 	if (game->mouseEnabled) {
