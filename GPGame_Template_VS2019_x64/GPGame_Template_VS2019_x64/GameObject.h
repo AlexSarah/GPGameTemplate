@@ -75,6 +75,7 @@ public:
 	Shapes			collision;
 	vector<Particle*> particles;
 	vector<Shapes> particles_collisions;
+	char			normal_collision;
 	int nbPcl;
 
 	glm::vec3 pos0;
