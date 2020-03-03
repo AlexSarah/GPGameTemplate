@@ -18,11 +18,14 @@
 using namespace std;
 
 // Helper graphic libraries
+#include <stdlib.h>
+#include <stdio.h>
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
 #include <glm/glm.hpp>
 #define GLM_ENABLE_EXPERIMENTAL
 #include <glm/gtx/transform.hpp>
+#include <glm/gtx/string_cast.hpp>
 #include "graphics.h"
 #include "shapes.h"
 #include "particle.h"
@@ -157,7 +160,7 @@ void updateCamera(Game game) {
 	myGraphics.cameraFront = glm::normalize(front);
 
 	// Update movement using the keys
-	GLfloat cameraSpeed = 1.0f * game.deltaTime;
+	GLfloat cameraSpeed = 3.0f * game.deltaTime;
 	if (game.keyStatus[GLFW_KEY_W]) myGraphics.cameraPosition += cameraSpeed * myGraphics.cameraFront;
 	if (game.keyStatus[GLFW_KEY_S]) myGraphics.cameraPosition -= cameraSpeed * myGraphics.cameraFront;
 	if (game.keyStatus[GLFW_KEY_A]) myGraphics.cameraPosition -= glm::normalize(glm::cross(myGraphics.cameraFront, myGraphics.cameraUp)) * cameraSpeed;
@@ -203,6 +206,7 @@ void updateSceneElements(Game* game) {
 					game->game_element[i].figure_center();
 					game->game_element[i].figure.mv_matrix = myGraphics.viewMatrix *
 						glm::translate(game->game_element[i].translation) *
+						glm::rotate(game->game_element[i].angle, game->game_element[i].rotation) *
 						glm::scale(game->game_element[i].scaling) *
 						glm::mat4(1.0f);
 					game->game_element[i].figure.proj_matrix = myGraphics.proj_matrix;
@@ -426,23 +430,68 @@ void onMouseWheelCallback(GLFWwindow* window, double xoffset, double yoffset) {
 	int yoffsetInt = static_cast<int>(yoffset);
 }
 
+
+void		Load_Map(string filename, Game *game)
+{
+	ifstream file(filename);
+	string	 line("");
+	glm::vec3	map_coordinates;
+	int		 index = 0;
+
+
+	map_coordinates.y = 2.0;
+	map_coordinates.z = 2.0;
+	if (file)
+		while (getline(file, line))
+		{
+			map_coordinates.x = 0;
+			for (int i = 0; i < line.size(); i++)
+			{
+				switch (line[i])
+				{
+				case '0':
+					map_coordinates.x -= 1;
+					break;
+				case '1':
+					game->game_element.push_back(GameObject(rand(), 1, 1));
+					if (game->game_element.size() == 0)
+						index = 0;
+					else
+						index = game->game_element.size() - 1;
+					game->game_element[index].translation = glm::vec3(map_coordinates.x - 0.01 - 0.5, map_coordinates.y - 1, map_coordinates.z - 0.2);
+					map_coordinates.x -= 1;
+					break;
+				case '2':
+					if (game->game_element.size() == 0)
+						index = 0;
+					else
+						index = game->game_element.size() - 1;
+					game->game_element.push_back(GameObject(rand(), 1, 1));
+					game->game_element[index].translation = (glm::vec3(map_coordinates.x - 0.01 - 0.2, map_coordinates.y - 1, map_coordinates.z - 0.5));
+					game->game_element[index].rotation = glm::vec3(0.0f, 1.0f, 0.0f);
+					game->game_element[index].angle = 90.0f;
+					map_coordinates.x -= 0.4;
+					break;
+				}
+			}
+			map_coordinates.z -= 2;
+		}
+	else
+		exit(0);
+}
+
+
 int main()
 {
 	int errorGraphics = myGraphics.Init();			// Launch window and graphics context
 	if (errorGraphics) return 0;					// Close if something went wrong...
-	/*ifstream file("./Resource Files/Map.txt");
+	string		filename("map.txt");
+	
 
-	if (file)
-		;
-	else
-		exit(0);*/
+	Load_Map(filename, &game);
 
 
-	game.game_element.push_back(GameObject(1, 1, 1));
-	/*game.game_element.push_back(GameObject(2, 2, 0));
-	game.game_element.push_back(GameObject(4, 4, 1));
-	game.game_element.push_back(GameObject(5, 4, 2));
-	game.game_element.push_back(GameObject(6, 4, 3));*/
+
 	game.game_element.push_back(GameObject(7, 1, 2));
 	/*game.game_element.push_back(GameObject(8, 5, 0));
 	game.game_element.push_back(GameObject(9, 3, 0));*/
