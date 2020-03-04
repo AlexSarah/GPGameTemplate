@@ -357,36 +357,36 @@ void updateSceneElements(Game* game) {
 				break;
 			case 6:
 				for (int j = 0; j < game->game_element[i].nbPcl; j++) {
-					game->game_element[i].particles[j]->updateFountain();
-				
-						game->game_element[i].translation = glm::vec3(game->game_element[i].particles[j]->position);
+					if (game->game_element[i].subtype == 1) // Fountain
+					{
+						game->game_element[i].particles[j]->updateFountain();
+					}
+					else if (game->game_element[i].subtype == 2) 
+					{
+						game->game_element[i].particles[j]->updatePosPcl(80.0f, game->game_element[i].touched);
+					
+					game->game_element[i].translation = glm::vec3(game->game_element[i].particles[j]->position);
 
-						game->game_element[i].figure_center(0);
+					game->game_element[i].figure_center(0);
 
-						//Check if there is a collision with others gameobjects elements, including particles
+					//Check if there is a collision with others gameobjects elements, including particles
+					for (int a = 0; a < game->game_element.size(); a++)
+					{
+						game->game_element[i].update_possible_transformation(game->game_element[i].translation, game->game_element[i].rotation, game->game_element[i].scaling, game->game_element[i].angle);
+						game->game_element[i].figure_center(1);
 						for (int a = 0; a < game->game_element.size(); a++)
 						{
-							game->game_element[i].update_possible_transformation(game->game_element[i].translation, game->game_element[i].rotation, game->game_element[i].scaling, game->game_element[i].angle);
-							game->game_element[i].figure_center(1);
-							for (int a = 0; a < game->game_element.size(); a++)
+							if (check_if_collision(game->game_element[i], game->game_element[a]) == true && a != i)
 							{
-																
-									if (check_if_collision(game->game_element[i], game->game_element[a]) == true && a != i)
-									{
-										game->game_element[i].touched = true;
-									}
+								game->game_element[i].touched = true;
 							}
 						}
+					}
 
-						if (game->game_element[i].touched) {
-							cout << " touched ";
-						}
-						else {
-							cout << " pastouched ";
-						}
+					//End of the check ; Do whatever you want with particles behaviour behind, inside the check_collision condition, if it's true.
 
-						//End of the check ; Do whatever you want with particles behaviour behind, inside the check_collision condition, if it's true.
-						game->game_element[i].particles[j]->updateAfterCollision(game->game_element[i].touched);
+					game->game_element[i].particles[j]->updatePosPcl(80.0f, game->game_element[i].touched);
+				}
 						
 						glm::mat4 mv_matrix_sphere =
 							glm::translate(glm::vec3(game->game_element[i].particles[j]->position)) *
@@ -723,7 +723,7 @@ int main()
 	//Load_Map(filename, &game);
 
 	game.game_element.push_back(GameObject(7, 1, 2));
-	game.game_element.push_back(GameObject(89, 1, 0));
+	//game.game_element.push_back(GameObject(89, 1, 0));
 	/*game.game_element.push_back(GameObject(8, 5, 0));
 	game.game_element.push_back(GameObject(9, 3, 0));*/
 	game.game_element.push_back(GameObject(10, 6, 1));

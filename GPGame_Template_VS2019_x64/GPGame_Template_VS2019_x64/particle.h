@@ -17,7 +17,7 @@ public:
 
     bool dead;
 
-    bool collision;
+    double speed;
 
     Particle();
 
@@ -29,9 +29,9 @@ public:
 
     void update();
 
-    void updatePosPcl(float angle, double v0);
+	void updatePosPcl(float angle, bool touched);
 
-    void updateFountain();
+	void updateFountain();
 
     void updateShooting();
 
@@ -42,5 +42,7 @@ public:
     float birthTime;
 
     int id;
+
+    float friction;
 };
 

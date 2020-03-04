@@ -33,11 +33,11 @@ GameObject::GameObject(int id_param, int object_type_param, int figure_type_para
 		scaling = glm::vec3(0.1f, 0.1f, 0.1f);
 		if (figure_type_param == 1) {
 			scaling = glm::vec3(0.1f, 0.1f, 0.1f);
-			createFountain(figure, 1);
+			createFountain(figure, 360);
 		}
 		if (figure_type_param == 2) {
-		scaling = glm::vec3(0.5f, 0.5f, 0.5f);
-		createFountain(figure, 2);
+			scaling = glm::vec3(0.5f, 0.5f, 0.5f);
+			createFountain(figure, 2);
 		}
 		break;
 	}
@@ -174,7 +174,7 @@ void GameObject::createFountain(Shapes shape, int nb) {
 	for (int i = 0; i < nbPcl; i++) {
 		particles.push_back(new Particle());
 		particles[i]->id = i;
-		particles[i]->init(glm::vec3(0.5f, 0.5f, 0.5f), o, shape);
+		particles[i]->init(glm::vec3(0.0f, 0.5f, 0.0f), o, shape);
 		o += 1.0; // +1 degree
 	}
 }
