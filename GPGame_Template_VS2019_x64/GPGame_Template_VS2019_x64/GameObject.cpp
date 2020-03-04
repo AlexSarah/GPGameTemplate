@@ -31,13 +31,13 @@ GameObject::GameObject(int id_param, int object_type_param, int figure_type_para
 	case 6:
 		figure = Sphere();
 		scaling = glm::vec3(0.1f, 0.1f, 0.1f);
-		if (figure_type_param == 1) {
+		if (figure_type_param == 1) { //Fountain
 			scaling = glm::vec3(0.1f, 0.1f, 0.1f);
 			createFountain(figure, 360);
 		}
-		if (figure_type_param == 2) {
+		if (figure_type_param == 2) { //Bouncing balls 
 			scaling = glm::vec3(0.5f, 0.5f, 0.5f);
-			createFountain(figure, 2);
+			createBalls(figure, 1);
 		}
 		break;
 	}
@@ -179,13 +179,11 @@ void GameObject::createFountain(Shapes shape, int nb) {
 	}
 }
 
-void GameObject::createShooting(Shapes shape, int nb) {
+void GameObject::createBalls(Shapes shape, int nb) {
 	nbPcl = nb;
-	for (int i = 0; i < nbPcl; i++) {
 		particles.push_back(new Particle());
-		particles[i]->id = i;
-		particles[i]->init(glm::vec3(2.0f, 5.0f, 0.0f), 0, shape);
-	}
+		particles[0]->id = 99;
+		particles[0]->init(glm::vec3(-2.0f, 0.5f, 0.3f), 0, shape);
 }
 
 

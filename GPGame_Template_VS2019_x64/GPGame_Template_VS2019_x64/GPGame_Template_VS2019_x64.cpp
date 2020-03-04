@@ -361,7 +361,7 @@ void updateSceneElements(Game* game) {
 					{
 						game->game_element[i].particles[j]->updateFountain();
 					}
-					else if (game->game_element[i].subtype == 2) 
+					else if (game->game_element[i].subtype == 2) //bouncing balls
 					{
 						game->game_element[i].particles[j]->updatePosPcl(80.0f, game->game_element[i].touched);
 					
@@ -726,7 +726,8 @@ int main()
 	//game.game_element.push_back(GameObject(89, 1, 0));
 	/*game.game_element.push_back(GameObject(8, 5, 0));
 	game.game_element.push_back(GameObject(9, 3, 0));*/
-	game.game_element.push_back(GameObject(10, 6, 1));
+	//game.game_element.push_back(GameObject(10, 6, 1)); //fountain
+	game.game_element.push_back(GameObject(10, 6, 2)); //bouncing balls
 	
 	startup(&game);										// Setup all necessary information for startup (aka. load texture, shaders, models, etc).
 

@@ -12,9 +12,10 @@ using namespace std;
     {
         id = -1;
         lifespan = 0;
-        dead = true;
+        dead = false;
         birthTime = 0;
         friction = 1;
+        speed = 10;
     }
 
     void Particle::init(glm::vec3 vec,float o, Shapes shape) {
@@ -42,7 +43,7 @@ using namespace std;
         position.y = speed/friction * sin(rad(angle/friction)) * (t - birthTime) - 0.5 * 9.81 * pow((t - birthTime), 2) + pos0.y;
         position.z = (speed/friction * cos(rad(angle/friction)) * (t - birthTime) + pos0.x) * sin(rad(orientation));
         lifespan += 1;
-        if (touched) {
+        if (touched && lifespan > 20) {
             birthTime = t;
             pos0 = position;
             friction += 0.2;
@@ -60,7 +61,6 @@ using namespace std;
         }
         if (dead == false) {
             update();
-            speed = 8;
         }
     }
     /*
