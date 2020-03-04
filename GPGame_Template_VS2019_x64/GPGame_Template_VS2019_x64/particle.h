@@ -17,6 +17,8 @@ public:
 
     bool dead;
 
+    bool collision;
+
     Particle();
 
     void init(glm::vec3 vec, float o, Shapes shape);
@@ -26,6 +28,14 @@ public:
     void load();
 
     void update();
+
+    void updatePosPcl(float angle, double v0);
+
+    void updateFountain();
+
+    void updateShooting();
+
+    void updateAfterCollision(bool touched);
 
     void setColor();
 

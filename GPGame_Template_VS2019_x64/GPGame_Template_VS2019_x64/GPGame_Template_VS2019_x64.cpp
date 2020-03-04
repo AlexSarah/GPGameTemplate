@@ -33,7 +33,6 @@ using namespace std;
 #include "Game.h"
 #include "GameObject.h"
 using namespace std::this_thread;
-#define rad glm::radians
 
 // MAIN FUNCTIONS
 void startup(Game* game);
@@ -357,7 +356,51 @@ void updateSceneElements(Game* game) {
 				}
 				break;
 			case 6:
-				for (int j=0; j < game->game_element[i].nbPcl; j++) {
+				for (int j = 0; j < game->game_element[i].nbPcl; j++) {
+					game->game_element[i].particles[j]->updateFountain();
+				
+						game->game_element[i].translation = glm::vec3(game->game_element[i].particles[j]->position);
+
+						game->game_element[i].figure_center(0);
+
+						//Check if there is a collision with others gameobjects elements, including particles
+						for (int a = 0; a < game->game_element.size(); a++)
+						{
+							game->game_element[i].update_possible_transformation(game->game_element[i].translation, game->game_element[i].rotation, game->game_element[i].scaling, game->game_element[i].angle);
+							game->game_element[i].figure_center(1);
+							for (int a = 0; a < game->game_element.size(); a++)
+							{
+																
+									if (check_if_collision(game->game_element[i], game->game_element[a]) == true && a != i)
+									{
+										game->game_element[i].touched = true;
+									}
+							}
+						}
+
+						if (game->game_element[i].touched) {
+							cout << " touched ";
+						}
+						else {
+							cout << " pastouched ";
+						}
+
+						//End of the check ; Do whatever you want with particles behaviour behind, inside the check_collision condition, if it's true.
+						game->game_element[i].particles[j]->updateAfterCollision(game->game_element[i].touched);
+						
+						glm::mat4 mv_matrix_sphere =
+							glm::translate(glm::vec3(game->game_element[i].particles[j]->position)) *
+							glm::scale(game->game_element[i].scaling) *
+							glm::mat4(1.0f);
+
+						game->game_element[i].particles[j]->shapePcl.mv_matrix = myGraphics.viewMatrix * mv_matrix_sphere;
+						game->game_element[i].particles[j]->shapePcl.proj_matrix = myGraphics.proj_matrix;
+
+						game->game_element[i].touched = false;
+					}
+				}
+
+				/*for (int j=0; j < game->game_element[i].nbPcl; j++) {
 
 					if (game->game_element[i].particles[j]->dead == true) {
 						int r = rand() % 15;
@@ -418,8 +461,8 @@ void updateSceneElements(Game* game) {
 						game->game_element[i].collision.mv_matrix = mv_matrix_collision;
 						game->game_element[i].collision.proj_matrix = myGraphics.proj_matrix;
 					}	
-				}
-		}
+				}*/
+		
 	}
 	// Calculate Cube position
 	/*game->game_element[0].translation = glm::vec3(-t, 1.5f, 0.0f);
@@ -536,13 +579,6 @@ void updateSceneElements(Game* game) {
 void renderScene(Game* game) {
 	// Clear viewport - start a new frame.
 	myGraphics.ClearViewport();
-	
-	//Particle explosion
-	/*for (int i = 0; i < e.nbPcl; i++) {
-		if (e.p[i].dead == false) {
-			e.p[i].shapePcl.Draw();
-		}
-	}*/
 
 	// Draw objects in screen
 
@@ -684,26 +720,13 @@ int main()
 	infile.open("car.txt");// Close if something went wrong...
 	string		filename("map.txt");
 
-
-	/*if (infile)
-		;
-	else
-		exit(0);*/
-
-	//Load_car(filename);
-
-/*	if (shit)
-		cout << "IM RICH BIAAAATCHHHH !!!!" << endl;
-	else
-		cout << "SALOOOPR !!!!" << endl;*/
-	Load_Map(filename, &game);
-
+	//Load_Map(filename, &game);
 
 	game.game_element.push_back(GameObject(7, 1, 2));
 	game.game_element.push_back(GameObject(89, 1, 0));
 	/*game.game_element.push_back(GameObject(8, 5, 0));
 	game.game_element.push_back(GameObject(9, 3, 0));*/
-	game.game_element.push_back(GameObject(10, 6, 0));
+	game.game_element.push_back(GameObject(10, 6, 1));
 	
 	startup(&game);										// Setup all necessary information for startup (aka. load texture, shaders, models, etc).
 

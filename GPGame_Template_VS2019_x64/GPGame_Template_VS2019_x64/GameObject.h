@@ -91,7 +91,8 @@ public:
 	void figure_center(int mode);
 	void update_collision_scale_and_values();
 	glm::vec4 	matrices_mul(glm::mat4, glm::vec4);
-	void createFountain(Shapes shape);
+	void createFountain(Shapes shape, int nb);
+	void createShooting(Shapes shape, int nb);
 	void update_possible_transformation(glm::vec3 translation, glm::vec3 rotation, glm::vec3 scaling, float a_angle);
 
 };
