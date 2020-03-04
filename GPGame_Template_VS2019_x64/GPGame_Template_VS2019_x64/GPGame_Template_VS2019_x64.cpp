@@ -15,6 +15,7 @@
 #include <fstream>
 #include <vector>
 #include <thread>
+#include <sstream>
 using namespace std;
 
 // Helper graphic libraries
@@ -50,8 +51,9 @@ void onMouseWheelCallback(GLFWwindow* window, double xoffset, double yoffset);
 
 // VARIABLES    // Keep track of time per frame.
 // variable to keep overall time.
+glm::vec3	destination_to_reach;
 Game	game;
-
+Specific spider;
 // MAIN GRAPHICS OBJECT
 Graphics    myGraphics;        // Runing all the graphics in this object
 
@@ -172,7 +174,11 @@ void updateCamera(Game* game) {
 
 	// Update movement using the keys
 	GLfloat cameraSpeed = 3.0f * game->deltaTime;
-	if (game->keyStatus[GLFW_KEY_W]) myGraphics.cameraPosition += cameraSpeed * myGraphics.cameraFront;
+
+
+
+	if (game->keyStatus[GLFW_KEY_W]) 
+		myGraphics.cameraPosition += cameraSpeed * myGraphics.cameraFront;
 	if (game->keyStatus[GLFW_KEY_S]) myGraphics.cameraPosition -= cameraSpeed * myGraphics.cameraFront;
 	if (game->keyStatus[GLFW_KEY_A]) myGraphics.cameraPosition -= glm::normalize(glm::cross(myGraphics.cameraFront, myGraphics.cameraUp)) * cameraSpeed;
 	if (game->keyStatus[GLFW_KEY_D]) myGraphics.cameraPosition += glm::normalize(glm::cross(myGraphics.cameraFront, myGraphics.cameraUp)) * cameraSpeed;
@@ -267,6 +273,9 @@ void updateCamera(Game* game) {
 			}
 	
 
+
+		
+
 	//if (game->keyStatus[GLFW_KEY_SPACE])
 
 	// IMPORTANT PART
@@ -296,6 +305,13 @@ void updateSceneElements(Game* game) {
 
 	// Do not forget your ( T * R * S ) http://www.opengl-tutorial.org/beginners-tutorials/tutorial-3-matrices/
 
+
+	glm::mat4 mv_matrix_spider = myGraphics.viewMatrix *
+		glm::translate(glm::vec3(0.0f,0.0f,0.0f)) *
+		glm::scale(glm::vec3(1.0f,1.0f,1.0f)) *
+		glm::mat4(1.0f);
+	spider.mv_matrix = mv_matrix_spider;
+	spider.proj_matrix = myGraphics.proj_matrix;
 
 	for (int i = 0; i < game->game_element.size(); i++)
 	{
@@ -546,6 +562,9 @@ void renderScene(Game* game) {
 
 	// Draw objects in screen
 
+
+	spider.Draw();
+
 	for (int i = 0; i < game->game_element.size(); i++) {
 		if (game->game_element[i].type != 6)
 		{
@@ -660,18 +679,84 @@ void		Load_Map(string filename, Game *game)
 		exit(0);
 }
 
-void		Load_car(string datafile)
+void		Load_object(string datafile)
 {
+	string	buffer("");
+
 	ifstream data(datafile);
 	string		line("");
+
 
 	if (data)
 	{
 		while (getline(data, line))
-			cout << line << endl;
+			buffer = buffer + line + "\n";
 	}
 	else
 		exit(0);
+
+	cout << buffer << endl;
+
+	/*std::vector< glm::vec3 > obj_vertices;
+	std::vector< unsigned int > vertexIndices;
+	istringstream rawDataStream(rawData);
+	string dataLine;  int linesDone = 0;
+
+	while (std::getline(rawDataStream, dataLine)) {
+		if (dataLine.find("v ") != string::npos) {	// does this line have a vector?
+			glm::vec3 vertex;
+
+			int foundStart = dataLine.find(" ");  int foundEnd = dataLine.find(" ", foundStart + 1);
+			vertex.x = stof(dataLine.substr(foundStart, foundEnd - foundStart));
+
+			foundStart = foundEnd; foundEnd = dataLine.find(" ", foundStart + 1);
+			vertex.y = stof(dataLine.substr(foundStart, foundEnd - foundStart));
+
+			foundStart = foundEnd; foundEnd = dataLine.find(" ", foundStart + 1);
+			vertex.z = stof(dataLine.substr(foundStart, foundEnd - foundStart));
+
+			obj_vertices.push_back(vertex);
+		}
+		else if (dataLine.find("f ") != string::npos) { // does this line defines a triangle face?
+			string parts[3];
+
+			int foundStart = dataLine.find(" ");  int foundEnd = dataLine.find(" ", foundStart + 1);
+			parts[0] = dataLine.substr(foundStart + 1, foundEnd - foundStart - 1);
+
+			foundStart = foundEnd; foundEnd = dataLine.find(" ", foundStart + 1);
+			parts[1] = dataLine.substr(foundStart + 1, foundEnd - foundStart - 1);
+
+			foundStart = foundEnd; foundEnd = dataLine.find(" ", foundStart + 1);
+			parts[2] = dataLine.substr(foundStart + 1, foundEnd - foundStart - 1);
+
+			for (int i = 0; i < 3; i++) {		// for each part
+
+				vertexIndices.push_back(stoul(parts[i].substr(0, parts[i].find("/"))));
+
+				int firstSlash = parts[i].find("/"); int secondSlash = parts[i].find("/", firstSlash + 1);
+
+				if (firstSlash != (secondSlash + 1)) {	// there is texture coordinates.
+														// add code for my texture coordintes here.
+				}
+			}
+		}
+
+		linesDone++;
+	}
+
+	for (unsigned int i = 0; i < vertexIndices.size(); i += 3) {
+		vertexPositions.push_back(obj_vertices[vertexIndices[i + 0] - 1].x);
+		vertexPositions.push_back(obj_vertices[vertexIndices[i + 0] - 1].y);
+		vertexPositions.push_back(obj_vertices[vertexIndices[i + 0] - 1].z);
+
+		vertexPositions.push_back(obj_vertices[vertexIndices[i + 1] - 1].x);
+		vertexPositions.push_back(obj_vertices[vertexIndices[i + 1] - 1].y);
+		vertexPositions.push_back(obj_vertices[vertexIndices[i + 1] - 1].z);
+
+		vertexPositions.push_back(obj_vertices[vertexIndices[i + 2] - 1].x);
+		vertexPositions.push_back(obj_vertices[vertexIndices[i + 2] - 1].y);
+		vertexPositions.push_back(obj_vertices[vertexIndices[i + 2] - 1].z);
+	}*/
 
 }
 
@@ -681,29 +766,28 @@ int main()
 	int errorGraphics = myGraphics.Init();			// Launch window and graphics context
 	if (errorGraphics) return 0;
 	ifstream infile;
-	infile.open("car.txt");// Close if something went wrong...
+	string		objectfile("Spider.txt");
 	string		filename("map.txt");
+
 
 
 	/*if (infile)
 		;
 	else
 		exit(0);*/
-
-	//Load_car(filename);
-
 /*	if (shit)
 		cout << "IM RICH BIAAAATCHHHH !!!!" << endl;
 	else
 		cout << "SALOOOPR !!!!" << endl;*/
-	Load_Map(filename, &game);
-
 
 	game.game_element.push_back(GameObject(7, 1, 2));
 	game.game_element.push_back(GameObject(89, 1, 0));
 	/*game.game_element.push_back(GameObject(8, 5, 0));
 	game.game_element.push_back(GameObject(9, 3, 0));*/
 	game.game_element.push_back(GameObject(10, 6, 0));
+	Load_object(objectfile);
+	Load_Map(filename, &game);
+
 	
 	startup(&game);										// Setup all necessary information for startup (aka. load texture, shaders, models, etc).
 

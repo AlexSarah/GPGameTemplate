@@ -61,7 +61,7 @@
     <Text Include="map.txt">
       <Filter>Source Files</Filter>
     </Text>
-    <Text Include="Object.txt">
+    <Text Include="Spider.txt">
       <Filter>Source Files</Filter>
     </Text>
   </ItemGroup>
