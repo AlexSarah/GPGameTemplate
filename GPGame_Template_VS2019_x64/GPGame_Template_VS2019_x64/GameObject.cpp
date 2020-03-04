@@ -29,12 +29,16 @@ GameObject::GameObject(int id_param, int object_type_param, int figure_type_para
 		figure = Line();
 		break;
 	case 6:
-		nbPcl = 10;
 		figure = Sphere();
 		scaling = glm::vec3(0.1f, 0.1f, 0.1f);
-		//if (figure_type_param == 1) 
-			//figure = Cube();
-		createFountain(figure);
+		if (figure_type_param == 1) {
+			scaling = glm::vec3(0.1f, 0.1f, 0.1f);
+			createFountain(figure, 1);
+		}
+		if (figure_type_param == 2) {
+		scaling = glm::vec3(0.5f, 0.5f, 0.5f);
+		createFountain(figure, 2);
+		}
 		break;
 	}
 	 if (object_type_param != 6)
@@ -44,6 +48,7 @@ GameObject::GameObject(int id_param, int object_type_param, int figure_type_para
 	collision.fillColor = glm::vec4(0.0f, 1.0f, 0.0f, 0.0f);
 	collision.lineColor = glm::vec4(0.0f, 1.0f, 0.0f, 1.0f);
 	dead = true;
+	touched = false;
 }
 
 void		GameObject::CollisionBox()
@@ -163,17 +168,25 @@ void		GameObject::figure_center(int mode)
 	min_figure_values.z = min_z;
 }
 
-void GameObject::createFountain(Shapes shape) {
+void GameObject::createFountain(Shapes shape, int nb) {
+	nbPcl = nb;
 	float o = 0.0;
 	for (int i = 0; i < nbPcl; i++) {
 		particles.push_back(new Particle());
-		particles[i]->id=i;
-		particles[i]->init(glm::vec3(0.0f, 0.0f, 0.0f), o, shape);
+		particles[i]->id = i;
+		particles[i]->init(glm::vec3(0.5f, 0.5f, 0.5f), o, shape);
 		o += 1.0; // +1 degree
-		cout << particles[i]->id;
 	}
 }
 
+void GameObject::createShooting(Shapes shape, int nb) {
+	nbPcl = nb;
+	for (int i = 0; i < nbPcl; i++) {
+		particles.push_back(new Particle());
+		particles[i]->id = i;
+		particles[i]->init(glm::vec3(2.0f, 5.0f, 0.0f), 0, shape);
+	}
+}
 
 
 void GameObject::update_possible_transformation(glm::vec3 a_translation, glm::vec3 a_rotation, glm::vec3 a_scaling, float a_angle)
