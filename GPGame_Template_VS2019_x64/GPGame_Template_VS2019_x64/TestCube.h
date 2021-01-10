@@ -3,15 +3,15 @@
 #include "shapes.h"
 #include "GameObject.h"	
 
-class TestCube : public Shapes, public GameObject
+class NewCube : public Shapes, public GameObject
 {
 public:
 
-	TestCube();
-	TestCube(string nature, int newId);
-	TestCube(glm::vec3 translation, glm::vec3 rotation, glm::vec3 scale);
-	TestCube(glm::vec3 mtranslation, glm::vec3 mrotation, glm::vec3 mscale, glm::vec4 mcolor);
-	~TestCube();
+	NewCube();
+	NewCube(string nature, int newId);
+	NewCube(glm::vec3 translation, glm::vec3 rotation, glm::vec3 scale);
+	NewCube(glm::vec3 mtranslation, glm::vec3 mrotation, glm::vec3 mscale, glm::vec4 mcolor);
+	~NewCube();
 
 private:
 	Shapes			collisionP;

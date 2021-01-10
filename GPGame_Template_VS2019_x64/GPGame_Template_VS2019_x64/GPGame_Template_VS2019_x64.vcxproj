@@ -161,6 +161,8 @@
     <ClCompile Include="GameObject.cpp" />
     <ClCompile Include="GPGame_Template_VS2019_x64.cpp" />
     <ClCompile Include="graphics.cpp" />
+    <ClCompile Include="NewCylinder.cpp" />
+    <ClCompile Include="NewSphere.cpp" />
     <ClCompile Include="particle.cpp" />
     <ClCompile Include="shapes.cpp" />
     <ClCompile Include="TestCube.cpp" />
@@ -169,6 +171,8 @@
     <ClInclude Include="Game.h" />
     <ClInclude Include="GameObject.h" />
     <ClInclude Include="graphics.h" />
+    <ClInclude Include="NewCylinder.h" />
+    <ClInclude Include="NewSphere.h" />
     <ClInclude Include="particle.h" />
     <ClInclude Include="resource.h" />
     <ClInclude Include="shapes.h" />

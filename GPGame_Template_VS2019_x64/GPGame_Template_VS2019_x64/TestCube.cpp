@@ -6,7 +6,7 @@
 #include <GLFW/glfw3.h>
 #include <glm/glm.hpp>
 
-TestCube::TestCube()
+NewCube::NewCube()
 {
 
 	figure = Cube();
@@ -23,7 +23,7 @@ TestCube::TestCube()
 	subtype = 0;
 }
 
-TestCube::TestCube(string nature, int newId) 
+NewCube::NewCube(string nature, int newId) 
 {
 	figure = Cube();
 	figure.Load();
@@ -53,7 +53,7 @@ TestCube::TestCube(string nature, int newId)
 	subtype = 0;
 }
 
-TestCube::TestCube(glm::vec3 mtranslation, glm::vec3 mrotation, glm::vec3 mscale)
+NewCube::NewCube(glm::vec3 mtranslation, glm::vec3 mrotation, glm::vec3 mscale)
 {
 	figure = Cube();
 	figure.Load();
@@ -74,7 +74,7 @@ TestCube::TestCube(glm::vec3 mtranslation, glm::vec3 mrotation, glm::vec3 mscale
 
 
 
-TestCube::TestCube(glm::vec3 mtranslation, glm::vec3 mrotation, glm::vec3 mscale, glm::vec4 mcolor) 
+NewCube::NewCube(glm::vec3 mtranslation, glm::vec3 mrotation, glm::vec3 mscale, glm::vec4 mcolor) 
 {
 	figure = Cube();
 	figure.Load();
@@ -86,12 +86,12 @@ TestCube::TestCube(glm::vec3 mtranslation, glm::vec3 mrotation, glm::vec3 mscale
 	rotation = mrotation;
 	scaling = mscale;
 	color = mcolor;
-	collision.fillColor = color;
+	figure.fillColor = color;
 
 }
 
 
 
-TestCube::~TestCube() {
+NewCube::~NewCube() {
 
 }

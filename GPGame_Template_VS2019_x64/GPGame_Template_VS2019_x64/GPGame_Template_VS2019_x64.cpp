@@ -514,7 +514,7 @@ void		Load_Map(string filename, Game *game) // This function allows loading a ma
 					break;
 				case '1':
 				{
-					TestCube Cube("Wall", rand());
+					NewCube Cube("Wall", rand());
 					game->game_element.push_back(Cube);
 				}
 					if (game->game_element.size() == 0)
@@ -527,7 +527,7 @@ void		Load_Map(string filename, Game *game) // This function allows loading a ma
 					break;
 				case '2':
 				{
-					TestCube Cube("Wall", rand());
+					NewCube Cube("Wall", rand());
 					game->game_element.push_back(Cube);
 				}
 					if (game->game_element.size() == 0)
@@ -561,7 +561,7 @@ int main()
 	ifstream infile;								// In order to read the file containing the map data
 	string		filename("map.txt");				// File of the Map
 
-	TestCube Cube("Cube", 88);						//Regular Cube we're choosing to instanciate and add to the elements vector
+	NewCube Cube("Cube", 88);						//Regular Cube we're choosing to instanciate with an id, and add it to the game elements vector
 
 
 	Load_Map(filename, &game);						// Load a map stored in a file

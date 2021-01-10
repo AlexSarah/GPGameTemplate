@@ -39,6 +39,12 @@
     <ClCompile Include="TestCube.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="NewSphere.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="NewCylinder.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="graphics.h">
@@ -60,6 +66,12 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="TestCube.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="NewSphere.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="NewCylinder.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
