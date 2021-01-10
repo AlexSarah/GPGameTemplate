@@ -79,7 +79,7 @@ void startup(Game *game) {
 
 	Shapes figure;
 
-//Setting up colors
+//Setting up colors - This part might be quite unecessary while this can be done int the subclasses of GameObject class. Feel free to set up the colors directly in theses classes.
 	for (int i=0 ; i < game->game_element.size(); i++)
 	{
 		switch (game->game_element[i].type)
@@ -144,12 +144,6 @@ void startup(Game *game) {
 		}
 
 	}
-
-		//For the line
-		/*game->game_element[6].figure.fillColor = glm::vec4(1.0f, 1.0f, 1.0f, 1.0f);
-		game->game_element[6].figure.lineColor = glm::vec4(0.2f, 0.2f, 0.2f, 1.0f);
-		game->game_element[6].figure.lineWidth = 5.0f;*/
-
 		// Optimised Graphics
 		myGraphics.SetOptimisations();        // Cull and depth testing
 }
@@ -164,7 +158,7 @@ bool		check_if_collision(GameObject first, GameObject second)
 }
 
 
-void updateCamera(Game* game) {
+void updateCamera(Game* game) { // And by the way, A Move function
 
 	// calculate movement for FPS camera
 	GLfloat xoffset = myGraphics.mouseX - myGraphics.cameraLastX;
@@ -202,8 +196,10 @@ void updateCamera(Game* game) {
 	glm::vec3 rotation;
 	glm::vec3 scale;
 
-	//Update Player position using the keys
+	//Update Player position using the keys // We chose an id of 89 for his object
 
+	//Here, before updating the camera, we implement the player's movement. We calculate eachtime he might collide
+	//with his surroundings. We decided to let the walls of the map merge beteween themselves while moved to keep it playful instead of being realistic
 	if (game->keyStatus[GLFW_KEY_LEFT])
 		for (int i = 0; i < game->game_element.size(); i++)
 			if (game->game_element[i].getId() == 89)
@@ -329,11 +325,6 @@ void updateCamera(Game* game) {
 }
 
 
-void		move(glm::vec3 param_translation, glm::vec3 param_scaling, glm::vec3 param_rotation)
-{
-
-}
-
 
 void updateSceneElements(Game* game) {
 
@@ -352,6 +343,7 @@ void updateSceneElements(Game* game) {
 	Shapes collision;
 	Shapes figure;
 
+	// THIS FUNCTION UPDATES EVERY ELEMENTS MATRICES, BEFORE RENDERING THEM ON THE SCREEN
 	for (int i = 0; i < game->game_element.size(); i++)
 	{
 		if (game->game_element[i].type != 6)
@@ -427,7 +419,7 @@ void updateSceneElements(Game* game) {
 
 }
 
-void renderScene(Game* game) {
+void renderScene(Game* game) { //Rendering the scene
 	// Clear viewport - start a new frame.
 	myGraphics.ClearViewport();
 
@@ -459,7 +451,7 @@ void onResizeCallback(GLFWwindow* window, int w, int h) {    // call everytime t
 	myGraphics.proj_matrix = glm::perspective(glm::radians(50.0f), myGraphics.aspect, 0.1f, 1000.0f);
 }
 
-void onKeyCallback(GLFWwindow* window, int key, int scancode, int action, int mods) { // called everytime a key is pressed
+void onKeyCallback(GLFWwindow* window, int key, int scancode, int action, int mods) { // Called everytime a key is pressed
 	if (action == GLFW_PRESS) game.keyStatus[key] = true;
 	else if (action == GLFW_RELEASE) game.keyStatus[key] = false;
 
@@ -477,7 +469,7 @@ void onMouseButtonCallback(GLFWwindow* window, int button, int action, int mods)
 
 }
 
-void onMouseMoveCallback(GLFWwindow* window, double x, double y) {
+void onMouseMoveCallback(GLFWwindow* window, double x, double y) { //Mouse Move Callback
 	int mouseX = static_cast<int>(x);
 	int mouseY = static_cast<int>(y);
 
@@ -495,7 +487,7 @@ void onMouseWheelCallback(GLFWwindow* window, double xoffset, double yoffset) {
 }
 
 
-void		Load_Map(string filename, Game *game) // Cette fonction permet
+void		Load_Map(string filename, Game *game) // This function allows loading a map, this one contains alphanumeric characters that are translated into objects.
 {
 	ifstream file(filename);
 	string	 line("");
@@ -531,7 +523,6 @@ void		Load_Map(string filename, Game *game) // Cette fonction permet
 						index = game->game_element.size() - 1;
 					translation = glm::vec3(map_coordinates.x - 0.01 - 0.5, map_coordinates.y - 1, map_coordinates.z - 0.2);
 					game->game_element[index].setTranslation(translation);
-					//game->game_element[index].translation = glm::vec3(map_coordinates.x - 0.01 - 0.5, map_coordinates.y - 1, map_coordinates.z - 0.2);
 					map_coordinates.x -= 1;
 					break;
 				case '2':
@@ -544,6 +535,7 @@ void		Load_Map(string filename, Game *game) // Cette fonction permet
 					else
 						index = game->game_element.size() - 1;
 
+					//The calculations here only depends on our mentally predefined walls dimensions and the map information.
 					translation = (glm::vec3(map_coordinates.x - 0.01 - 0.2, map_coordinates.y - 1, map_coordinates.z - 1));
 					game->game_element[index].setTranslation(translation);
 					scale = glm::vec3(2.0f, 2.0f, 0.4f);
@@ -569,19 +561,16 @@ int main()
 	ifstream infile;								// In order to read the file containing the map data
 	string		filename("map.txt");				// File of the Map
 
-	TestCube Cube("Cube", 88);
-	//TestCube Cube(glm::vec3(10.0f, 10.0f, 10.0f), glm::vec3(0.0f, 1.0f, 0.0f), glm::vec3(1.0f, 1.0f, 1.0f));
+	TestCube Cube("Cube", 88);						//Regular Cube we're choosing to instanciate and add to the elements vector
 
 
-	Load_Map(filename, &game);
+	Load_Map(filename, &game);						// Load a map stored in a file
 
 	game.game_element.push_back(GameObject(7, 1, 2));
-	game.game_element.push_back(GameObject(89, 1, 0));
-	game.game_element.push_back(Cube);
-	/*game.game_element.push_back(GameObject(8, 5, 0));
-	game.game_element.push_back(GameObject(9, 3, 0));*/
-	//game.game_element.push_back(GameObject(10, 6, 1)); //fountain
-	//game.game_element.push_back(GameObject(10, 6, 2)); //bouncing balls
+	game.game_element.push_back(GameObject(89, 1, 0));	//2 Ways to add element, either precise the type o f element, as for the cube previously, either instanciate a GameObject with his type predefined in the GameObject.h
+	game.game_element.push_back(Cube);	
+	//game.game_element.push_back(GameObject(10, 6, 1)); //Activate The fountain
+	//game.game_element.push_back(GameObject(10, 6, 2)); //Activate the bouncing balls
 	
 	
 	startup(&game);										// Setup all necessary information for startup (aka. load texture, shaders, models, etc).
