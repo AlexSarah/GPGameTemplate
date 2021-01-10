@@ -51,6 +51,7 @@ using namespace std;
     }
 
     void Particle::updateFountain() {
+        setColor();
         GLfloat currentTime = (GLfloat)glfwGetTime();
         if (dead == true) {
             int r = rand() % 15;

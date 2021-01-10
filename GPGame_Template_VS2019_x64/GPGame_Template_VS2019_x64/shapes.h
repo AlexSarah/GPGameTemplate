@@ -43,6 +43,9 @@ class Cube : public Shapes {
 public:
 	Cube();
 	~Cube();
+
+
+
 };
 
 class Sphere : public Shapes {
@@ -74,3 +77,5 @@ public:
 	Specific();
 	~Specific();
 };
+
+

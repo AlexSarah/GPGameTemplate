@@ -163,6 +163,7 @@
     <ClCompile Include="graphics.cpp" />
     <ClCompile Include="particle.cpp" />
     <ClCompile Include="shapes.cpp" />
+    <ClCompile Include="TestCube.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Game.h" />
@@ -171,6 +172,7 @@
     <ClInclude Include="particle.h" />
     <ClInclude Include="resource.h" />
     <ClInclude Include="shapes.h" />
+    <ClInclude Include="TestCube.h" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="map.txt" />

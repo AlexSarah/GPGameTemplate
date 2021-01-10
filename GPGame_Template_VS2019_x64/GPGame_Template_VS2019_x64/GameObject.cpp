@@ -51,7 +51,25 @@ GameObject::GameObject(int id_param, int object_type_param, int figure_type_para
 	touched = false;
 }
 
+GameObject::GameObject()
+{
+	dead = true;
+	touched = false;
+}
+
+GameObject::~GameObject()
+{
+
+}
+
 void		GameObject::CollisionBox()
+{
+	collision = Cube();
+	collision.Load();
+
+}
+
+void		GameObject::CollisionBoxP()
 {
 	collision = Cube();
 	collision.Load();
@@ -196,3 +214,24 @@ void GameObject::update_possible_transformation(glm::vec3 a_translation, glm::ve
 
 	figure_center(0);
 }
+
+
+//Here the different setters and getters to retrieve the translation, rotation and scaling vectors of the object;
+glm::vec3 GameObject::getTranslation() { return translation; }
+void GameObject::setTranslation(glm::vec3 &newTranslation) { translation = newTranslation; }
+
+glm::vec3 GameObject::getRotation() { return rotation; }
+void GameObject::setRotation(glm::vec3 &newRotation) { rotation = newRotation; }
+
+glm::vec3 GameObject::getScale() { return scaling; }
+void GameObject::setScale(glm::vec3& newScaling) { scaling = newScaling; }
+
+int GameObject::getId() { return id; }
+
+Shapes GameObject::getShape() {	return figure; }
+void GameObject::setShape(Shapes &newFigure) {figure = newFigure; }
+
+Shapes GameObject::getCollision() { return collision; } 
+void GameObject::setCollision(Shapes &newCollision) { collision = newCollision; }
+glm::vec3 GameObject::getCollisionScale() { return collision_scaling; }
+void GameObject::setCollisionScale(glm::vec3& newScaling) { collision_scaling = newScaling; }

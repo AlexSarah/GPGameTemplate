@@ -45,15 +45,11 @@ using namespace std;
 class GameObject
 {
 public:
-	glm::vec3	worldcenter_position;
-	glm::vec3	translation = glm::vec3(0.0f, 0.0f, 0.0f);
-	glm::vec3	scaling = glm::vec3(1.0f, 1.0f, 1.0f);
-	glm::vec3	rotation = glm::vec3(0.0f, .0f, 1.0f);
-	glm::vec3	rotation_2 = glm::vec3(0.0f, 0.0f, 1.0f);
-	glm::vec3	rotation_3 = glm::vec3(0.0f, 0.0f, 0.0f);
+
+
+	
 
 	//Important vectors for collision testing
-	glm::vec3	collision_scaling = glm::vec3(1.0f, 1.0f, 1.0f);
 	glm::vec3	max_figure_values = glm::vec3(0.0f, 0.0f, 0.0f);
 	glm::vec3	min_figure_values = glm::vec3(0.0f, 0.0f, 0.0f);
 	glm::vec3	possible_translation = glm::vec3(0.0f, 0.0f, 0.0f);
@@ -61,9 +57,20 @@ public:
 	glm::vec3	possible_rotation = glm::vec3(0.0f, .0f, 1.0f);
 	float		possible_angle = 0.0f;
 
+	GameObject();
+	~GameObject();
+
+	glm::vec3 getTranslation(); void setTranslation(glm::vec3 &);
+	glm::vec3 getRotation(); void setRotation(glm::vec3 &);
+	glm::vec3 getScale(); void setScale(glm::vec3 &);
+	glm::vec3 getCollisionScale(); void setCollisionScale(glm::vec3&);
+
+	Shapes getShape(); void setShape(Shapes &Shape);
+	Shapes getCollision(); void setCollision(Shapes &Collision);
+
+	int getId();
 
 
-	int				id;
 	int				type;
 	int				subtype;
 	float			angle = 0.0f;
@@ -71,8 +78,6 @@ public:
 	glm::vec4		line_color;
 	glm::vec4		fill_color;
 
-	Shapes			figure;
-	Shapes			collision;
 	vector<Particle*> particles;
 	vector<Shapes> particles_collisions;
 	char			normal_collision;
@@ -96,4 +101,22 @@ public:
 	void createBalls(Shapes shape, int nb);
 	void update_possible_transformation(glm::vec3 translation, glm::vec3 rotation, glm::vec3 scaling, float a_angle);
 
+protected :
+
+	int				id;
+
+	glm::vec3	worldcenter_position;
+	glm::vec3	translation = glm::vec3(0.0f, 0.0f, 0.0f);
+	glm::vec3	scaling = glm::vec3(1.0f, 1.0f, 1.0f);
+	glm::vec3	collision_scaling = glm::vec3(1.0f, 1.0f, 1.0f);
+	glm::vec3	rotation = glm::vec3(0.0f, .0f, 1.0f);
+
+
+	Shapes			figure;
+	Shapes			collision;
+
+	glm::vec4	color = glm::vec4(0.7f, 0.7f, 0.7f, 1.0f);
+	glm::vec4	Lcolor = glm::vec4(0.0f, 1.0f, 0.0f, 0.0f);
+
+	void CollisionBoxP();
 };

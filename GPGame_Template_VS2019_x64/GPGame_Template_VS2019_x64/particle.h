@@ -33,10 +33,6 @@ public:
 
 	void updateFountain();
 
-    void updateShooting();
-
-    void updateAfterCollision(bool touched);
-
     void setColor();
 
     float birthTime;
