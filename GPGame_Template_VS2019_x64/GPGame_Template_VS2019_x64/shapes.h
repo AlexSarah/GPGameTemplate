@@ -68,3 +68,9 @@ public:
 	Line();
 	~Line();
 };
+
+class Specific : public Shapes {
+public:
+	Specific();
+	~Specific();
+};
